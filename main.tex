@@ -200,30 +200,34 @@ This is the expression of the loss function used in this work.
 \subsection{Training}
 A Variational Autoencoder (VAE) was implemented in the PyTorch framework~\citep{paszke2019} using an architecture based on two-dimensional convolutional layers. The VAE configuration is defined by list of hyperparameters reported in Table~\ref{tab:hyperparameters}. The neural network was trained in batches using the Adam optimizer for 400 epochs. The reconstruction loss and KL divergence (averaged over the batches) are reported for each epoch in Fig.~\ref{fig:loss} for both the training and validation datasets in order to prevent overfitting. The training (validation) dataset is composed by a 256(64)-member ensemble of modelled volcanic ash column mass on a two-dimensional grid of size $120 \times 100$. As outlined in the scheme of Fig.~\ref{fig:vae}, the encoder network maps the input data $\vec{x} \in \mathbb{R}^{120\times100}$ through three successive convolutional layers, followed by a flattening operation, to two distinct latent space parameter vectors: $\vec{\mu}$ (mean) and $\vec{\sigma}^2$ (log-variance). The decoder then reconstructs the input $\vec{x'}$ from the sampled latent vector $\vec{z} \in \mathbb{R}^{16}$ using a fully connected layer followed by three transposed convolutional layers (or deconvolutional layers), restoring the spatial dimensions, \ie $\vec{x'} \in \mathbb{R}^{120\times100}$.
 
+%
+% To be included in the Supplementary material
+%
+%\begin{figure}[ht]
+%  \centering
+%  \includegraphics[width=0.5\textwidth]{loss}
+%  \caption{%
+%    Training history for the variational autoencoder (VAE) through 400 epochs. %
+%    The reconstruction loss ($\mathcal{L}_R$) and KL divergence ($\mathcal{L}_{KL}$) %
+%    are shown separately for the training and validation datasets for each epochs. %
+%    The total loss function is given by $\mathcal{L}_R + \beta \, \mathcal{L}_{KL}$. 
+%    In this configuration we used a latent dimension of 16 and a $\beta=6$.
+%    }
+%  \label{fig:loss}
+%\end{figure}
+
+By construction, the components of the latent vector encoded from the training dataset are distributed according independent standard normal distributions: $z_i \sim \mathbb{N}(0,1)$. A very low correlation between every pair $(z_i,z_j)$ is confirmed by the covariance matrix (Fig.~\ref{fig:latent_space}a). It is also interesting to corroborate whether the test dataset is encoded in the same region of the latent space sampled by the training dataset. Figure~\ref{fig:latent_space}b shows a two-dimensional visualization of the latent space based on the Uniform Manifold Approximation and Projection (UMAP) algorithm~\citep{mcinnes2020}. This is a technique for non-linear dimensionality reduction specifically designed to preserve the local structure of the data. The test and the training datasets covers the same region of the UMAP projection, exactly as it occurs in the original latent space (it can verified by plotting any pair of components of the latent vector, \ie $z_5$ vs $z_4$). All these remarks as a whole indicate that the network was correctly trained and works as expected.
+
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{loss}
-  \caption{%
-    Training history for the variational autoencoder (VAE) through 400 epochs. %
-    The reconstruction loss ($\mathcal{L}_R$) and KL divergence ($\mathcal{L}_{KL}$) %
-    are shown separately for the training and validation datasets for each epochs. %
-    The total loss function is given by $\mathcal{L}_R + \beta \, \mathcal{L}_{KL}$. 
-    In this configuration we used a latent dimension of 16 and a $\beta=6$.
-    }
-  \label{fig:loss}
-\end{figure}
-
-Figure~\ref{fig:latent_space}a shows the training and test datasets encoded in latent space (just two arbitrary components of the latent vector are shown, \ie $z_5$ vs $z_4$). As expected by construction, the components of the latent vector are distributed according independent standard normal distributions: $z_i \sim \mathbb{N}(0,1)$. A very low correlation between every pair $(z_i,z_j)$ is confirmed by the correlation matrix (Fig.~\ref{fig:latent_space}b). Notice that the samples from the test dataset are filling the same area as the samples used for training the network. All these remarks as a whole indicate that the network was correctly trained and works as expected.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.5\textwidth]{latent_space}
+  \includegraphics[width=0.4\textwidth]{latent_space}
   \caption{%
     Latent space representation of the training and test datasets. %
-    As an example, the encoding in the latent plane $(z_5,z_4)$ 
-    is shown in a scatter plot (a). %
+    UMAP two-dimensional visualization of the latent space (a)
+    shows that the test dataset is encoded in the same region 
+    of the latent space covered by the training dataset.
     The independence between the distributions of the latent vector 
-    components can be confirmed from the correlation matrix (b). 
+    components can be confirmed from the covariance matrix (b). 
     }
   \label{fig:latent_space}
 \end{figure}
@@ -310,7 +314,7 @@ We trained multiple VAEs changing the latent space dimension and $\beta$
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{boxplot}
+  \includegraphics[width=0.4\textwidth]{boxplot}
   \caption{VAE performance for different hyperparameters in term of the ensemble mean RMSE.}
   \label{fig:boxplot}
 \end{figure}
@@ -363,7 +367,7 @@ In order to examine if the VAE ensemble provides a better approximation to the a
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{kl_divergence}
+  \includegraphics[width=0.4\textwidth]{kl_divergence}
   \caption{%
     Kullback Leibler (KL) divergence computed from the training dataset (a) %
     and the VAE-generated samples (b). From these results, it is possible %
@@ -377,7 +381,7 @@ To explore this point further, a few histograms for different locations are show
 
 \begin{figure*}[ht]
   \centering
-  \includegraphics[width=\textwidth]{histograms}
+  \includegraphics[width=0.8\textwidth]{histograms}
   \caption{%
     Histograms for the training datasets (256 samples, left column) and 
     a VAE ensemble (2048 samples, right column) at the different locations.
@@ -392,7 +396,7 @@ The isotropic power spectrum, \ie the radially averaged two-dimensional Power Sp
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{psd}
+  \includegraphics[width=0.4\textwidth]{psd}
   \caption{The isotropic power spectrum, \ie radially averaged two-dimensional Power Spectral Density, reveals inconsistencies in the spatial structure of the samples generated by the variational autoencoder. The generative model reproduces large scales but fails at scales smaller since the AI model is introducing artificial noise for large k. Since the wavenumber is expressed in terms of the grid size, $\Delta x$, we can conclude that the VAE is unable to reproduce the variability over spatial scales below $\sim 4~\Delta x$, approximately. }
   \label{fig:psd}
 \end{figure}
@@ -401,7 +405,7 @@ To illustrate this point, Fig.~\ref{fig:bias} shows a map of the bias computed i
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{bias}
+  \includegraphics[width=0.4\textwidth]{bias}
   \caption{%
     Bias computed from the ensemble mean for the training dataset (a) and the VAE samples (b).
     The generative AI model produces a noisy pattern with small intensity and high-frequency.
