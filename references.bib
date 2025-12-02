@@ -12,6 +12,8 @@
 @STRING{grl={Geophys.\ Res.\ Lett.}}
 @STRING{gmd={Geosci.\ Model Dev.}}
 @STRING{gmdd={Geosci.\ Model Dev.\ Discuss.}}
+@STRING{james={J.\ Adv.\ Model.\ Earth Sy.}}
+@STRING{jcp={J.\ Comput.\ Phys.}}
 @STRING{jgr={J.\ Geophys.\ Res.}}
 @STRING{jgra={J.\ Geophys.\ Res.-Atmos.}}
 @STRING{jgrp={J.\ Geophys.\ Res.-Planets}}
@@ -20,6 +22,20 @@
 @STRING{jvgr={J.\ Volcanol.\ Geoth.\ Res.}}
 @STRING{mwr={Mon.\ Weather Rev.}}
 @STRING{nhess={Nat.\ Hazards Earth Syst.\ Sci.}}
+@STRING{rse={"Remote Sens.\ Environ."}}
+@STRING{scirep={Sci.\ Rep.}}
+@STRING{trc={Transp.\ Res.\ Part C-Emerg.\ Technol.}}
+
+@article{bauer2015,
+  title={The quiet revolution of numerical weather prediction},
+  author={Bauer, Peter and Thorpe, Alan and Brunet, Gilbert},
+  journal={Nature},
+  volume={525},
+  number={7567},
+  pages={47--55},
+  year={2015},
+  publisher={Nature Publishing Group UK London}
+}
 
 @article{bishop2001,
     author = {Bishop, Craig H. and Etherton, Brian J. and Majumdar, Sharanya J.},
@@ -55,6 +71,17 @@
     year = {2025}
 }
 
+@article{corradino2024,
+    author = {Claudia Corradino and Paul Jouve and Alessandro {La Spina} and Ciro {Del Negro}},
+    title = {Monitoring Earth's atmosphere with Sentinel-5 TROPOMI and Artificial Intelligence: Quantifying volcanic SO2 emissions},
+    journal = rse,
+    volume = {315},
+    pages = {114463},
+    year = {2024},
+    issn = {0034-4257},
+    doi = {10.1016/j.rse.2024.114463}
+}
+
 @article{costa2016,
     author = {A. Costa and Y.J. Suzuki and M. Cerminara and B.J. Devenish and T. Esposti Ongaro and M. Herzog and A.R. {Van Eaton} and L.C. Denby and M. Bursik and M. {de' Michieli Vitturi} and S. Engwell and A. Neri and S. Barsotti and A. Folch and G. Macedonio and F. Girault and G. Carazzo and S. Tait and E. Kaminski and L.G. Mastin and M.J. Woodhouse and J.C. Phillips and A.J. Hogg and W. Degruyter and C. Bonadonna},
     title = {Results of the eruptive column model inter-comparison study},
@@ -73,6 +100,16 @@
     number = {16},
     pages = {},
     doi = {10.1029/2012GL052566},
+    year = {2012}
+}
+
+@article{devenish2012,
+    author = {Devenish, B. J. and Francis, P. N. and Johnson, B. T. and Sparks, R. S. J. and Thomson, D. J.},
+    title = {Sensitivity analysis of dispersion modeling of volcanic ash from Eyjafjallajökull in May 2010},
+    journal = jgra,
+    volume = {117},
+    number = {D20},
+    doi = {10.1029/2011JD016782},
     year = {2012}
 }
 
@@ -171,6 +208,31 @@
   year={2013}
 }
 
+@article{leutbecher2008,
+    author = {M. Leutbecher and T.N. Palmer},
+    title = {Ensemble forecasting},
+    journal = jcp,
+    volume = {227},
+    number = {7},
+    pages = {3515-3539},
+    year = {2008},
+    note = {Predicting weather, climate and extreme events},
+    issn = {0021-9991},
+    doi = {10.1016/j.jcp.2007.02.014}
+}
+
+@article{madankan2014,
+    author = {R. Madankan and S. Pouget and P. Singla and M. Bursik and J. Dehn and M. Jones and A. Patra and M. Pavolonis and E.B. Pitman and T. Singh and P. Webley},
+    title = {Computation of probabilistic hazard maps and source parameter estimation for volcanic ash transport and dispersion},
+    journal = jcp,
+    volume = {271},
+    pages = {39--59},
+    year = {2014},
+    note = {Frontiers in Computational Physics},
+    issn = {0021-9991},
+    doi = {10.1016/j.jcp.2013.11.032}
+}
+
 @incollection{marzocchi2006,
     author = {Marzocchi, W. and Sandri, L. and Furlan, C.},
     isbn = {9781862392083},
@@ -235,28 +297,6 @@
   year={2020},
 }
 
-@article{pfeiffer2005,
-    author = "T. Pfeiffer and A. Costa and G. Macedonio",
-    title = "A model for the numerical simulation of tephra fall deposits",
-    journal = jvgr,
-    volume = "140",
-    number = "4",
-    pages = "273 -- 294",
-    year = "2005",
-    doi = "10.1016/j.jvolgeores.2004.09.001",
-}
-
-@article{prata2021,
-    author = {Prata, A. T. and Mingari, L. and Folch, A. and Macedonio, G. and Costa, A.},
-    title = {FALL3D-8.0: a computational model for atmospheric transport and deposition of particles, aerosols and radionuclides -- Part 2:  Model validation},
-    journal = gmd,
-    volume = {14},
-    year = {2021},
-    number = {1},
-    pages = {409--436},
-    doi = {10.5194/gmd-14-409-2021}
-}
-
 @misc{pasmans2025,
       title={Ensemble Kalman filter in latent space using a variational autoencoder pair},
       author={Ivo Pasmans and Yumeng Chen and Tobias Sebastian Finn and Marc Bocquet and Alberto Carrassi},
@@ -277,6 +317,28 @@
     url={https://arxiv.org/abs/1912.01703}
 }
 
+@article{pfeiffer2005,
+    author = "T. Pfeiffer and A. Costa and G. Macedonio",
+    title = "A model for the numerical simulation of tephra fall deposits",
+    journal = jvgr,
+    volume = "140",
+    number = "4",
+    pages = "273 -- 294",
+    year = "2005",
+    doi = "10.1016/j.jvolgeores.2004.09.001",
+}
+
+@article{poulidis2018,
+  title={Meteorological controls on local and regional volcanic ash dispersal},
+  author={Poulidis, Alexandros P and Phillips, Jeremy C and Renfrew, Ian A and Barclay, Jenni and Hogg, Andrew and Jenkins, Susanna F and Robertson, Richard and Pyle, David M},
+  journal=scirep,
+  volume={8},
+  number={1},
+  pages={6873},
+  year={2018},
+  publisher={Nature Publishing Group UK London}
+}
+
 @article{poulidis2021,
     author = {Alexandros P. Poulidis and Masato Iguchi},
     title = {Model sensitivities in the case of high-resolution Eulerian simulations of local tephra transport and deposition},
@@ -285,6 +347,44 @@
     pages = {105136},
     year = {2021},
     doi = {10.1016/j.atmosres.2020.105136},
+}
+
+@article{prata2021,
+    author = {Prata, A. T. and Mingari, L. and Folch, A. and Macedonio, G. and Costa, A.},
+    title = {FALL3D-8.0: a computational model for atmospheric transport and deposition of particles, aerosols and radionuclides -- Part 2:  Model validation},
+    journal = gmd,
+    volume = {14},
+    year = {2021},
+    number = {1},
+    pages = {409--436},
+    doi = {10.5194/gmd-14-409-2021}
+}
+
+@Inbook{sandri2025,
+    author="Sandri, Laura
+    and Tierz, Pablo
+    and Loughlin, Susan C.",
+    editor="Spica, Zack
+    and Caudron, Corentin",
+    title="From Eruptive Histories to Volcano Monitoring: Probabilistic Eruption Forecasting and Volcanic Hazard Assessment at Varying Temporal and Spatial Scales",
+    bookTitle="Modern Volcano Monitoring",
+    year="2025",
+    publisher="Springer Nature Switzerland",
+    address="Cham",
+    pages="365--397",
+    isbn="978-3-031-86841-2",
+    doi="10.1007/978-3-031-86841-2_12"
+}
+
+@article{stefanescu2014,
+    author = {Stefanescu, E. R. and Patra, A. K. and Bursik, M. I. and Madankan, R. and Pouget, S. and Jones, M. and Singla, P. and Singh, T. and Pitman, E. B. and Pavolonis, M. and Morton, D. and Webley, P. and Dehn, J.},
+    title = {Temporal, probabilistic mapping of ash clouds using wind field stochastic variability and uncertain eruption source parameters: Example of the 14 April 2010 Eyjafjallajökull eruption},
+    journal = james,
+    volume = {6},
+    number = {4},
+    pages = {1173--1184},
+    doi = {https://doi.org/10.1002/2014MS000332},
+    year = {2014}
 }
 
 @article{titos2022,
@@ -298,6 +398,30 @@
     doi = {10.5194/nhess-22-139-2022}
 }
 
+@article{toth1997,
+      author = "Zoltan Toth and Eugenia Kalnay",
+      title = "Ensemble Forecasting at NCEP and the Breeding Method",
+      journal = mwr,
+      year = "1997",
+      publisher = "American Meteorological Society",
+      address = "Boston MA, USA",
+      volume = "125",
+      number = "12",
+      doi = "10.1175/1520-0493(1997)125<3297:EFANAT>2.0.CO;2",
+      pages= "3297--3319"
+}
+
+@article{torrisi2024,
+    author = {Federica Torrisi and Claudia Corradino and Simona Cariello and Ciro {Del Negro}},
+    title = {Enhancing detection of volcanic ash clouds from space with convolutional neural networks},
+    journal = jvgr,
+    volume = {448},
+    pages = {108046},
+    year = {2024},
+    issn = {0377-0273},
+    doi = {10.1016/j.jvolgeores.2024.108046}
+}  
+
 @article{woodhouse2016,
     author = {Mark J. Woodhouse and Andrew J. Hogg and Jeremy C. Phillips},
     title = {A global sensitivity analysis of the PlumeRise model of volcanic plumes},
@@ -306,6 +430,17 @@
     pages = {54--76},
     year = {2016},
     doi = {10.1016/j.jvolgeores.2016.02.019},
+}
+
+@article{wu2021,
+    author = {Hao Wu and David Levinson},
+    title = {The ensemble approach to forecasting: A review and synthesis},
+    journal = trc,
+    volume = {132},
+    pages = {103357},
+    year = {2021},
+    issn = {0968-090X},
+    doi = {10.1016/j.trc.2021.103357}
 }
 
 @article{zidikheri2021,
