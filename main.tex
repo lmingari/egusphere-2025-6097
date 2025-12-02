@@ -402,19 +402,20 @@ A proper assessment of natural hazards requires a good estimation of probabiliti
   \label{fig:exceedance}
 \end{figure*}
 
-In order to examine whether the VAE ensemble provides a better approximation to the actual distribution (target), the KL divergence, $D_{KL}$, is computed for each location (Fig.~\ref{fig:kl_divergence}). The discrete probability distributions
-are estimated from histograms (128 bins between 0 and 40) and the reference distributions, $P$, in~(\ref{eq:kl}) are those corresponding to the test dataset. In general, the VAE results are much lower than those of the training dataset across the whole domain. For example, the 99th-percentiles of $D_{KL}$ were 3.6 (training) and 0.3 (VAE), indicating that VAE provides a better approximation to the actual distribution with a 10x reduction of $D_{KL}$, approximately.
+In order to examine whether the VAE ensemble provides a better approximation to the actual distribution (target), the JS divergence, $JSD$, is computed for each location (Fig.~\ref{fig:js_divergence}). The discrete probability distributions are estimated from histograms (128 bins between 0 and 40) and the reference distributions, $P$, in~(\ref{eq:kl}) are those corresponding to the test dataset. In general, the VAE results are much lower than those of the training dataset across the whole domain. For example, the 99th-percentiles of $D_{KL}$ were 3.6 (training) and 0.3 (VAE), indicating that VAE provides a better approximation to the actual distribution with a 10x reduction of $D_{KL}$, approximately.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.4\textwidth]{kl_divergence}
+  \includegraphics[width=0.4\textwidth]{jl_divergence}
   \caption{%
-    Kullback Leibler (KL) divergence computed from the training dataset (a) %
-    and the VAE-generated samples (b). From these results, it is possible %
-    conclude that the actual probability distribution is better %
-    approximated by the VAE ensemble.
+    The Jensen-Shannon (JS) divergence was computed for each grid cell
+    considering different sizes of the VAE-generated ensemble.
+    The 99th percentile is reported as a worst-case measure of performance.
+    Low values indicate a good approximation to the actual
+    probability distribution. The result for the training dataset 
+    is also indicated for reference.
     }
-  \label{fig:kl_divergence}
+  \label{fig:js_divergence}
 \end{figure}
 
 To further explore this point, a few histograms are shown in Fig.~\ref{fig:histograms} for four locations, comparing results for the training dataset (left column) and a VAE ensemble with 5000 samples (right column). As expected, the distribution for the training dataset with a small ensemble size (256) results in a very noisy distribution, while the VAE distribution provides a good approximation to the test dataset distribution, even for multimodal distributions (\eg, Fig.~\ref{fig:histograms}b).
