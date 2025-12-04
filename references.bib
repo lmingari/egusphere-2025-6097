@@ -1,6 +1,7 @@
 @STRING{acp={Atm.\ Chem. \ Phys.}}
 @STRING{atm={Atmosphere}}
 @STRING{ares={Atmos.\ Res.}}
+@STRING{bams={Bull.\ Amer.\ Meteorol.\ Soc.}}
 @STRING{blm={Bound-Lay.\ Meteorol.}}
 @STRING{bv={Bull.\ Volcanol.}}
 @STRING{compgeo={Comput.\ Geosci.}}
@@ -22,7 +23,8 @@
 @STRING{jvgr={J.\ Volcanol.\ Geoth.\ Res.}}
 @STRING{mwr={Mon.\ Weather Rev.}}
 @STRING{nhess={Nat.\ Hazards Earth Syst.\ Sci.}}
-@STRING{rse={"Remote Sens.\ Environ."}}
+@STRING{phitra={Philos.\ Trans.\ A Math.\ Phys.\ Eng.\ Sci.}}
+@STRING{rse={Remote Sens.\ Environ.}}
 @STRING{scirep={Sci.\ Rep.}}
 @STRING{trc={Transp.\ Res.\ Part C-Emerg.\ Technol.}}
 
@@ -35,6 +37,19 @@
   pages={47--55},
   year={2015},
   publisher={Nature Publishing Group UK London}
+}
+
+@article{berner2017,
+    author = "Judith Berner and Ulrich Achatz and Lauriane Batté and Lisa Bengtsson and Alvaro de la Cámara and Hannah M. Christensen and Matteo Colangeli and Danielle R. B. Coleman and Daan Crommelin and Stamen I. Dolaptchiev and Christian L. E. Franzke and Petra Friederichs and Peter Imkeller and Heikki Järvinen and Stephan Juricke and Vassili Kitsios and François Lott and Valerio Lucarini and Salil Mahajan and Timothy N. Palmer and Cécile Penland and Mirjana Sakradzija and Jin-Song von Storch and Antje Weisheimer and Michael Weniger and Paul D. Williams and Jun-Ichi Yano",
+    title = "Stochastic Parameterization: Toward a New View of Weather and Climate Models",
+    journal = bams,
+    year = "2017",
+    publisher = "American Meteorological Society",
+    address = "Boston MA, USA",
+    volume = "98",
+    number = "3",
+    doi = "10.1175/BAMS-D-15-00268.1",
+    pages= "565--588"
 }
 
 @article{bishop2001,
@@ -113,21 +128,6 @@
     year = {2012}
 }
 
-@software{folch2025,
-  author       = {Folch, Arnau and
-                  Costa, Antonio and
-                  Macedonio, Giovanni and
-                  Mingari, Leonardo and
-                  Pascual Saldaña, Heribert},
-  title        = {FALL3D},
-  month        = nov,
-  year         = 2025,
-  publisher    = {Zenodo},
-  version      = {9.1.0},
-  doi          = {10.5281/zenodo.17737081},
-  url          = {https://doi.org/10.5281/zenodo.17737081},
-}
-
 @article{folch2020,
     author = {Folch, A. and Mingari, L. and Gutierrez, N. and Hanzich, M. and Macedonio, G. and Costa, A.},
     title = {FALL3D-8.0: a computational model for atmospheric transport and deposition of particles, aerosols and radionuclides -- Part 1: Model physics and numerics},
@@ -172,6 +172,20 @@
   doi       = {j.future.2023.04.006}
 }
 
+@software{folch2025,
+  author       = {Folch, Arnau and
+                  Costa, Antonio and
+                  Macedonio, Giovanni and
+                  Mingari, Leonardo and
+                  Pascual Saldaña, Heribert},
+  title        = {FALL3D},
+  month        = nov,
+  year         = 2025,
+  publisher    = {Zenodo},
+  version      = {9.1.0},
+  doi          = {10.5281/zenodo.17737081}
+}
+
 @article{fu2016,
     author = {Fu, G. and Heemink, A. and Lu, S. and Segers, A. and Weber, K. and Lin, H.-X.},
     title = {Model-based aviation advice on distal volcanic ash clouds by assimilating aircraft in situ measurements},
@@ -194,11 +208,47 @@
     doi = {10.5194/acp-17-1187-2017}
 }
 
+@misc{gao2023,
+      title={PreDiff: Precipitation Nowcasting with Latent Diffusion Models}, 
+      author={Zhihan Gao and Xingjian Shi and Boran Han and Hao Wang and Xiaoyong Jin and Danielle Maddix and Yi Zhu and Mu Li and Yuyang Wang},
+      year={2023},
+      eprint={2307.10422},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2307.10422}, 
+}
+
+@article {govett2024,
+    author = "Mark Govett and Bubacar Bah and Peter Bauer and Dominique Berod and Veronique Bouchet and Susanna Corti and Chris Davis and Yihong Duan and Tim Graham and Yuki Honda and Adrian Hines and Michel Jean and Junishi Ishida and Bryan Lawrence and Jian Li and Juerg Luterbacher and Chiasi Muroi and Kris Rowe and Martin Schultz and Martin Visbeck and Keith Williams",
+    title = "Exascale Computing and Data Handling: Challenges and Opportunities for Weather and Climate Prediction",
+    journal = bams,
+    year = "2024",
+    publisher = "American Meteorological Society",
+    address = "Boston MA, USA",
+    volume = "105",
+    number = "12",
+    doi = "10.1175/BAMS-D-23-0220.1",
+    pages = "E2385--E2404"
+}
+
 @book{kalnay2003,
   title={Atmospheric modeling, data assimilation and predictability},
   author={Kalnay, Eugenia},
   year={2003},
   publisher={Cambridge university press}
+}
+
+@article{kashinath2021,
+    author = {Kashinath, K. and Mustafa, M. and Albert, A. and Wu, J-L. and Jiang, C. and Esmaeilzadeh, S. and Azizzadenesheli, K. and Wang, R. and Chattopadhyay, A. and Singh, A. and Manepalli, A. and Chirila, D. and Yu, R. and Walters, R. and White, B. and Xiao, H. and Tchelepi, H. A. and Marcus, P. and Anandkumar, A. and Hassanzadeh, P. and Prabhat},
+    title = {Physics-informed machine learning: case studies for weather and climate modelling},
+    journal = phitra,
+    volume = {379},
+    number = {2194},
+    pages = {20200093},
+    year = {2021},
+    month = {02},
+    issn = {1364-503X},
+    doi = {10.1098/rsta.2020.0093}
 }
 
 @article{kingma2013,
@@ -360,6 +410,17 @@
     doi = {10.5194/gmd-14-409-2021}
 }
 
+@article{raissi2019,
+    author = {M. Raissi and P. Perdikaris and G.E. Karniadakis},
+    title = {Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations},
+    journal = jcp,
+    volume = {378},
+    pages = {686--707},
+    year = {2019},
+    issn = {0021-9991},
+    doi = {https://doi.org/10.1016/j.jcp.2018.10.045}
+}
+
 @Inbook{sandri2025,
     author="Sandri, Laura
     and Tierz, Pablo
@@ -385,6 +446,16 @@
     pages = {1173--1184},
     doi = {https://doi.org/10.1002/2014MS000332},
     year = {2014}
+}
+
+@misc{tretiak2022,
+    title={Physics-Constrained Generative Adversarial Networks for 3D Turbulence}, 
+    author={Dima Tretiak and Arvind T. Mohan and Daniel Livescu},
+    year={2022},
+    eprint={2212.00217},
+    archivePrefix={arXiv},
+    primaryClass={physics.comp-ph},
+    url={https://arxiv.org/abs/2212.00217}, 
 }
 
 @article{titos2022,
@@ -420,7 +491,30 @@
     year = {2024},
     issn = {0377-0273},
     doi = {10.1016/j.jvolgeores.2024.108046}
-}  
+}
+
+@misc{wang2025,
+      title={PhyDA: Physics-Guided Diffusion Models for Data Assimilation in Atmospheric Systems}, 
+      author={Hao Wang and Jindong Han and Wei Fan and Weijia Zhang and Hao Liu},
+      year={2025},
+      eprint={2505.12882},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2505.12882}, 
+}
+
+@article{weisheimer2014,
+    author = {Weisheimer, Antje and Corti, Susanna and Palmer, Tim and Vitart, Frederic},
+    title = {Addressing model error through atmospheric stochastic physical parametrizations: impact on the coupled ECMWF seasonal forecasting system},
+    journal = phitra,
+    volume = {372},
+    number = {2018},
+    pages = {20130290},
+    year = {2014},
+    month = {06},
+    issn = {1364-503X},
+    doi = {10.1098/rsta.2013.0290}
+}
 
 @article{woodhouse2016,
     author = {Mark J. Woodhouse and Andrew J. Hogg and Jeremy C. Phillips},
@@ -441,6 +535,16 @@
     year = {2021},
     issn = {0968-090X},
     doi = {10.1016/j.trc.2021.103357}
+}
+
+@misc{yang2020,
+      title={Enforcing Deterministic Constraints on Generative Adversarial Networks for Emulating Physical Systems}, 
+      author={Zeng Yang and Jin-Long Wu and Heng Xiao},
+      year={2020},
+      eprint={1911.06671},
+      archivePrefix={arXiv},
+      primaryClass={physics.comp-ph},
+      url={https://arxiv.org/abs/1911.06671}, 
 }
 
 @article{zidikheri2021,
