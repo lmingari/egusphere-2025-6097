@@ -232,7 +232,7 @@ By construction, the components of the latent vector encoded from the training d
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.4\textwidth]{latent_space}
+  \includegraphics[width=0.4\textwidth]{f02}
   \caption{%
     Encoding of the training and test datasets in the latent space. %
     The independence between the distributions of the latent vector 
@@ -316,7 +316,7 @@ Once the VAE neural network has been trained with numerical simulations, it is p
 
 \begin{figure*}[ht]
   \centering
-  \includegraphics[width=\textwidth]{vae_ensemble}
+  \includegraphics[width=\textwidth]{f03}
   \caption{%
     The neural network was trained to generate samples 
     of two-dimensional ash column mass, \ie the total 
@@ -336,7 +336,7 @@ On the one hand, large latent spaces often produce less stable training dynamics
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.4\textwidth]{boxplot}
+  \includegraphics[width=0.4\textwidth]{f04}
   \caption{
   VAE sensitivity analysis for different combinations of two hyperparameters: the latent space dimension (top) and the $\beta$ parameter (bottom), defined in (\ref{eq:L_vae}). 
   The performance is measured in terms of the 
@@ -354,7 +354,7 @@ A summary of the metrics is shown in Table~\ref{tab:metrics}. Metrics are comput
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.45\textwidth]{ensemble_mean_test}
+  \includegraphics[width=0.45\textwidth]{f05}
   \caption{%
     Target ensemble mean computed from the test dataset, 
     consisting of 2048 physics-based numerical simulations
@@ -365,7 +365,7 @@ A summary of the metrics is shown in Table~\ref{tab:metrics}. Metrics are comput
 
 \begin{figure*}[ht]
   \centering
-  \includegraphics[width=\textwidth]{ensemble_mean}
+  \includegraphics[width=\textwidth]{f06}
   \caption{%
     Ensemble mean maps obtained from the training dataset (a) and
     an ensemble VAE with 5000 samples (b). The bias maps are
@@ -403,7 +403,7 @@ can suffer from sampling errors, particularly when small ensembles are considere
 
 \begin{figure*}[ht]
   \centering
-  \includegraphics[width=\textwidth]{exceedance_probability}
+  \includegraphics[width=\textwidth]{f07}
   \caption{%
     Exceedance probabilities for three ash column mass thresholds (8, 16 and 20~$g~m^{-2}$ from top to bottom). 
     The probability contours correspond to 
@@ -419,12 +419,15 @@ In order to examine whether the sampled ensemble provides a good approximation t
 
 \begin{figure*}[ht]
   \centering
-  \includegraphics[width=0.8\textwidth]{histograms}
+  \includegraphics[width=0.8\textwidth]{f08}
   \caption{%
-    Histograms for the training datasets (256 samples, left column) and 
-    a VAE ensemble (5000 samples, right column) at the different locations.
-    The results are compared against the test dataset (2048 samples),
-    assumed to be the target reference (yellow shaded area).
+    Histograms for the training datasets (256 samples, left column) 
+    and a VAE-generated ensemble (5000 samples, right column) at 
+    different locations. The results are compared against the 
+    test dataset (2048 samples), assumed to be the reference target 
+    (yellow shaded area). For illustrative purposes, four sampling 
+    locations (see Fig.~\ref{fig:mean_test}) were selected:
+    P1 (a,b), P2 (c,d), P3 (e,f), and P4 (g,h).
     }
   \label{fig:histograms}
 \end{figure*}
@@ -439,7 +442,7 @@ As expected, VAE improves the training distribution only for large ensemble size
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.45\textwidth]{js_divergence}
+  \includegraphics[width=0.45\textwidth]{f09}
   \caption{%
     The Jensen-Shannon (JS) divergence was computed for each grid cell
     considering different sizes of the VAE-generated ensemble.
@@ -472,7 +475,7 @@ Finally, this behaviour is consistent with the disentangled latent representatio
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.45\textwidth]{psd}
+  \includegraphics[width=0.45\textwidth]{f10}
   \caption{%
     The isotropic power spectrum, \ie radially averaged 
     two-dimensional Power Spectral Density, 
