@@ -43,7 +43,7 @@ However, running large ensembles (hundreds to thousands of members) with Volcani
 %
 In this work, a convolutional Variational AutoEncoder (VAE) is trained on an ensemble of 256 forecasts simulated with the FALL3D model and subsequently used to generate larger ensembles, effectively augmenting physics-based ensemble modelling capacity. Ensembles with up to 8192 members were generated nearly instantaneously using the trained neural network, with no reliance on HPC resources.
 %
-The statistical properties of the expanded ensembles are characterised in detail and the performance of the VAE is evaluated against a test dataset composed of 2048 numerical simulations. The VAE-generated ensembles closely approximate the actual (target) probability distribution as well as key sample statistics such as the ensemble mean and spread with minimal degradation in the evaluation metrics.
+The statistical properties of the expanded ensembles are characterised in detail and the performance of the VAE is evaluated against a test dataset composed of 2048 numerical simulations. The VAE-generated ensembles closely approximate the actual (target) probability distribution as well as key sample statistics, such as the ensemble mean and spread with minimal degradation in the evaluation metrics.
 %
 Finally, we discuss possible future applications of this work, including latent space data assimilation via deep learning.
 \end{abstract}
@@ -52,7 +52,7 @@ Finally, we discuss possible future applications of this work, including latent 
 %
 % General overview
 %
-Operational forecasts of volcanic ash and \chem{SO_2} clouds rely on physics-based numerical simulations giving airborne concentrations and related aviation hazard products. In order to produce realistic forecasts, Volcanic Ash Transport and Dispersal (VATD) models must describe several complex processes, including plume micro-scale dynamics, atmospheric long-range transport, particle sedimentation and deposition or the injection of volcanic particles and aerosols into the atmosphere. However, the complexity of the underlying physical processes, the broad range of spatial and temporal scales involved, and the uncertainties in the quantification of the emissions and meteorological fields make the modelling of volcanic clouds particularly challenging and the resulting forecasts prone to errors.
+Operational forecasts of volcanic ash and \chem{SO_2} clouds rely on physics-based numerical simulations that yield airborne concentration fields and the corresponding aviation-hazard products. In order to produce realistic forecasts, Volcanic Ash Transport and Dispersal (VATD) models must describe several complex processes, including plume micro-scale dynamics, atmospheric long-range transport, particle sedimentation and deposition or the injection of volcanic particles and aerosols into the atmosphere. However, the complexity of the underlying physical processes, the broad range of spatial and temporal scales involved, and the uncertainties in the quantification of the emissions and meteorological fields make the modelling of volcanic clouds particularly challenging and the resulting forecasts prone to errors.
 %
 % Model uncertainties
 %
@@ -66,12 +66,14 @@ Ensemble modelling is a popular approach to deal with the uncertainties associat
 %
 Volcanic cloud forecasting has also benefited from ensemble modelling approaches, especially in areas like uncertainty quantification, hazard assessment and data assimilation. With the help of ensembles, it has been possible to characterise and quantify forecast uncertainties due to poorly constrained input parameters, model errors or uncertain weather data~\citep{stefanescu2014}, expanding upon and beyond traditional forecast products based on deterministic approaches~\citep{folch2022}.
 %
-This is also true for volcanic hazard assessment, another aspect of paramount importance to support long-term risk-based decision-making and short-term emergency management during volcanic crises~\citep{sandri2025}. Probabilistic hazard assessments, in particular, require estimating the probabilities that a given airspace/location will be impacted by a volcanic cloud/fallout~\citep{marzocchi2006}, and usually require a large number of numerical simulations for a proper probabilistic hazard assessment~\citep{madankan2014,titos2022}.
+This is also true for volcanic hazard assessment, another aspect of paramount importance to support long-term risk-based decision-making and short-term emergency management during volcanic crises~\citep{sandri2025}. Probabilistic hazard assessments, in particular, require estimating the probabilities that a given airspace/location will be impacted by a volcanic cloud/fallout~\citep{marzocchi2006}, and a proper probabilistic hazard assessment usually require a large number of numerical simulations \citep{madankan2014,titos2022}.
 %
-On the other hand, model errors can be reduced by incorporating observations into numerical models using ensemble-based data assimilation techniques~\citep{kalnay2003}. Data Assimilation (DA) techniques have been widely used to study and forecast geophysical systems and have been applied in a variety of research and operational settings~\citep{carrasi2018}. In particular, several ensemble-based methods have been applied in DA of volcanic plumes~\citep{folch2023}, including ensemble Kalman filter methods~\citep{fu2016,fu2017,osores2020,pardini2020,mingari2022} and ensemble particle filtering~\citep{zidikheri2021,zidikheri2021b}. In all the applications above, the use of large ensembles can be computationally costly even for HPC clusters, especially in the context of real-time operational services.
+On the other hand, forecast errors can be reduced by incorporating observations into numerical models using ensemble-based data assimilation \citep{kalnay2003}. Data Assimilation (DA) techniques have been widely used to study and forecast geophysical systems and have been applied in a variety of research and operational settings~\citep{carrasi2018}. In particular, several ensemble-based methods have been applied to volcanic plume forecasting \citep{folch2023}, including ensemble Kalman filter methods~\citep{fu2016,fu2017,osores2020,pardini2020,mingari2022} and ensemble particle filtering \citep{zidikheri2021,zidikheri2021b}.
 
 %
 % Ensembles and computational costs
+%
+In all these application examples, the use of large ensembles can be computationally costly, even on HPC clusters, especially in the context of real-time services.
 %
 Operational forecast frameworks must accommodate ensemble sizes to the available computing resources, resulting in ensembles limited to a few tens of members and the corresponding introduction of significant sampling errors \citep{weisheimer2014,berner2017,govett2024}. 
 %
@@ -134,7 +136,7 @@ The configuration of the FALL3D model is summarised in Table~\ref{tab:model}. A 
     \end{tabular}
 \end{table}
 
-Three different ensembles were simulated by perturbing the Eruption Source Parameters (ESPs) and wind components using the Latin Hypercube Sampling \citep[LHS,][]{mckay1979} to efficiently sample the parameter space. Table~\ref{tab:ensemble} lists the reference value and sampling range for each perturbed parameter. The top height of the eruption column was sampled around the central value $H=9~\text{km avl}$ (above vent level) with a perturbation range of $30\%$ and was assumed to be constant during simulations for each ensemble member. The vertical distribution of the source term was also modified by perturbing the Suzuki parameter $A_s$ controlling the maximum emission height \citep[see][for more information]{folch2020}. In addition, the horizontal wind components were perturbed considering a sampling range of $25\%$. Eruptive column height and wind are widely reconsigned as one of the most sensitive parameters/inputs for volcanic ash transport models \citep{devenish2012,poulidis2018}.
+Each ensemble was simulated by perturbing the Eruption Source Parameters (ESPs) and wind components using a Latin Hypercube Sampling \citep[LHS,][]{mckay1979} to efficiently sample the parameter space. Table~\ref{tab:ensemble} lists the reference value and sampling range for each perturbed parameter. The top height of the eruption column was sampled around the central value $H=9~\text{km avl}$ (above the vent level) with a perturbation range of $30\%$ and was assumed to be constant during the simulations for each ensemble member. The vertical distribution of the source term was also modified by perturbing the Suzuki parameter $A_s$ controlling the maximum emission height \citep[see][for more information]{folch2020}. In addition, the horizontal wind components were perturbed considering a sampling range of $25\%$. Eruptive column height and wind are widely reconsigned as one of the most sensitive parameters/inputs for volcanic ash transport models \citep{devenish2012,poulidis2018}.
 
 \begin{table}[h]
   \caption{Ensemble configuration. The perturbed model parameters are: eruption column height ($H$), mass eruptive rate ($MER$), Suzuki parameter $A_s$ and the wind horizontal components.}
@@ -155,7 +157,7 @@ Three different ensembles were simulated by perturbing the Eruption Source Param
     }
 \end{table}
 
-Three ensemble forecast were simulated to generate the training dataset (simulation A), validation dataset (simulation B), and test dataset (simulation C). As summarized in Table~\ref{tab:runs}, simulation A consists of an ensemble with 256 members, which we used to train the VAE. The ensemble consisting of 64 members (simulation B) was used during the training step to monitor the performance and tuning of the neural network hyperparameters. Finally, the larger 2048-member ensemble (simulation C) was used only at the end as a purely physics-based reference to evaluate the VAE model, providing a fair (unbiased) report of model accuracy. All numerical simulations were performed on the LUMI EuroHPC supercomputing system, hosted at CSC's (Finland). In particular, simulation C required substantial HPC resources and was executed on the LUMI-G partition allocating 256 computing nodes and a total of 2048 GPUs.
+Three ensemble forecasts were simulated to generate the training (simulation A), validation (simulation B), and test (simulation C) datasets. As summarized in Table~\ref{tab:runs}, the ensemble corresponding to simulation A, consisting of 256 members, was used to train the VAE. The 64-member ensemble (simulation B) was used during the training step to monitor the performance and tuning of the neural network hyperparameters. Finally, the larger 2048-member ensemble (simulation C) was used only at the end as a purely physics-based reference to evaluate the VAE model, providing a fair (unbiased) report of model accuracy. All numerical simulations were performed on the LUMI EuroHPC supercomputing system, hosted at CSC's (Finland). In particular, simulation C required substantial HPC resources and was executed on the LUMI-G partition allocating 256 computing nodes and a total of 2048 GPUs.
 
 \begin{table}[h]
   \caption{Datasets built from ensemble of numerical simulations.}
@@ -276,7 +278,7 @@ By construction, the components of the latent vector encoded from the training d
 \end{table}
 
 \subsection{Evaluation metrics} \label{sec:metrics}
-As long as VAE was trained using a physical model (simulation A, 256 members), a key question is whether an ensemble of new samples $\left\{ \vec{x_i} \right\}$ generated by VAE resembles the distribution of a larger ensemble produced by the same physical model $\left\{ \vec{\hat{x}_i} \right\}$ (simulation C, 2048 members). In other words, could a VAE trained with a small ensemble be used to generate a much larger ensemble indistinguishable from its physics-based equivalent? In order to answer this question, probabilistic distributions or sample statistics, such as ensemble mean, were compared against the reference ensemble (test dataset) consisting of 2048 simulations. Specifically, we first train a generative AI model using a 256-member ensemble, then use the VAE to generate a new ensemble of synthetic samples, and finally evaluate their performance against the 2048-member physics-based ensemble.
+As long as the neural network was trained using a physical model (simulation A, 256 members), a key question is whether an ensemble of new samples $\left\{ \vec{x_i} \right\}$ generated by the VAE resembles the distribution of a larger ensemble produced by the same physical model $\left\{ \vec{\hat{x}_i} \right\}$ (simulation C, 2048 members). In other words, could a VAE trained with a small ensemble be used to generate a much larger ensemble indistinguishable from its physics-based equivalent? In order to answer this question, probabilistic distributions or sample statistics, such as ensemble mean, were compared against the reference ensemble (test dataset) consisting of 2048 simulations. Specifically, we first train a generative AI model using a 256-member ensemble, then use the VAE to generate a new ensemble of synthetic samples, and finally evaluate their performance against the 2048-member physics-based ensemble.
 
 Several performance metrics can be considered to quantify the ability of the generative AI model to produce realistic ash concentration outputs. For example, the Root-Mean-Square Error (RMSE)
 \begin{equation}
@@ -317,7 +319,7 @@ Finally, the two-dimensional isotropic power spectrum, $P(k)$, is computed to as
 where $k=\sqrt{k_x^2 + k_y^2}$ is the magnitude of the wavevector, $PSD(k_x,k_y)$ is the two-dimensional Power Spectral Density obtained from a Fast Fourier Transform (FFT), and $N_k$ is the number of data points within an annular ring around $k$ in the Fourier space.
 
 \section{Results and discussion} \label{sec:results}
-Once the VAE neural network has been trained with numerical simulations, it is possible to generate new physics-grounded samples at very low computational cost and consistent with the underlying physical laws that govern atmospheric dispersion. For illustrative purposes, Figure~\ref{fig:vae_ensemble} shows a VAE-generated ensemble consisting of $M=12$ samples. The samples represent two-dimensional ash column mass plots, \ie the vertically integrated ash mass per unit area. The variability in the ensemble is a consequence of the different eruptive source parameters (\eg, eruptive column height) and meteorological fields used to simulate the training dataset. For example, samples in Fig.~\ref{fig:vae_ensemble}c,d correspond to cases with high eruptive column heights and strong emission, whereas other samples are associated with low column heights and weak emission, such as Fig.~\ref{fig:vae_ensemble}h. The volcanic plume is advected eastwards from the vent (16.76\degree W, 28.27\degree N) in most cases. Additionally, some cases are characterised by a secondary plume with a SE- or even W-component in the transport pattern, suggesting the presence of strong wind shear that introduces variability into the ensemble and leads to qualitatively different solutions.
+Once the VAE neural network has been trained with numerical simulations, it is possible to generate at very low computational cost new physics-grounded samples, which are expected to be consistent with the underlying physical laws that govern atmospheric dispersion. For illustrative purposes, Fig.~\ref{fig:vae_ensemble} shows a VAE-generated ensemble consisting of $M=12$ samples. The samples represent two-dimensional ash column mass plots, \ie the vertically integrated ash mass per unit area. The variability in the ensemble is a consequence of the different eruptive source parameters (\eg, eruptive column height) and meteorological fields used to simulate the training dataset. For example, samples in Fig.~\ref{fig:vae_ensemble}c,d correspond to cases with high eruptive column heights and strong emission, whereas other samples are associated with low column heights and weak emission (\eg Fig.~\ref{fig:vae_ensemble}h). The volcanic plume is advected eastwards from the vent (16.76\degree W, 28.27\degree N) in most cases. Additionally, some cases are characterised by a secondary plume with a SE- or even W-component in the transport pattern, suggesting the presence of strong wind shear that introduces variability into the ensemble and leads to qualitatively different solutions.
 
 \begin{figure*}[ht]
   \centering
@@ -332,19 +334,19 @@ Once the VAE neural network has been trained with numerical simulations, it is p
 \end{figure*}
 
 \subsection{Sensitivity study}
-A sensitivity test was conducted to evaluate the performance of different neural network configurations in terms of the RMSE computed from the ensemble mean. We trained multiple VAEs changing two key hyperparameters: the latent space dimension $K$ and the factor $\beta$ in \eqref{eq:vae_loss}, while fixing the remaining hyperparameters with the values specified in Table~\ref{tab:hyperparameters}.
+A sensitivity test was conducted to evaluate the performance of different neural network configurations. Performance is evaluated in terms of the RMSE of the ensemble mean using~\eqref{eq:rmse} (see Sect.~\ref{sec:metrics}). In other words, the RMSE reported in this section measures how far the mean of the VAE-generated ensembles deviates from the ensemble mean of the test dataset. We trained multiple VAEs changing two key hyperparameters: the latent space dimension $K$ and the factor $\beta$ in \eqref{eq:vae_loss}, while fixing the remaining hyperparameters with the values specified in Table~\ref{tab:hyperparameters}.
 %
 % Multi-ensemble metrics
-Since the VAE is a probabilistic model, each VAE-generated ensemble leads to different performances. In order to account for this stochastic variability, several 2048-member ensembles were generated. The boxplot in Fig.~\ref{fig:boxplot} integrates the RMSE results of 20 ensembles generated for each combination of hyperparameters. 
+Since the VAE is a probabilistic model, each VAE-generated ensemble leads to different performances. In order to account for this stochastic variability, several 2048-member ensembles were generated. For each combination of hyperparameters tested, 20 ensembles were generated and the boxplot in Fig.~\ref{fig:boxplot} integrates the resulting values of RMSE.
 %
 % Optimal hyperparameters
 In all cases, the network was trained for 400 epochs, except for configurations with latent dimensions of $K=4$ and $K=2$, where early stopping was required to avoid overfitting. According to the trend suggested by Fig.~\ref{fig:boxplot}, the best performance is achieved for latent dimensions $K \gtrsim 6$ and $\beta\gtrsim 6$. Remarkably, performance degrades slightly for large latent space dimensions (Fig.~\ref{fig:boxplot}a). There are two possible explanations for this anomaly.
 %
 % Latent dimension discussion
-First, large latent spaces often produce less stable training dynamics and worse generalization: enlarging latent spaces introduces more degrees of freedom than the data can realistically support. When the dimensionality grows beyond what is needed to represent the underlying factors, the model may spread information across latent variables in an inefficient way. This leads to poor compression, weaker regularization and a latent representation that becomes harder to structure during training, limiting the extraction of compact and meaningful representations. As a result, the decoder receives a less informative latent code, reducing reconstruction quality. On the other hand, increasing the latent dimensionality can slow convergence: since the model must explore a much larger parameter space before reaching a stable configuration, it requires more training iterations and makes optimisation less efficient. 
+First, large latent spaces often produce less stable training dynamics and worse generalization: enlarging latent spaces introduces more degrees of freedom than the data can realistically support. When the dimensionality grows beyond what is needed to represent the underlying factors, the model may spread information across latent variables in an inefficient way. This leads to poor compression, weaker regularization and a latent representation that becomes harder to structure during training, limiting the extraction of compact and meaningful representations. As a result, the decoder receives a less informative latent code, reducing the reconstruction quality. On the other hand, increasing the latent dimensionality can slow convergence: since the model must explore a much larger parameter space before reaching a stable configuration, it requires more training iterations and makes optimisation more difficult. 
 %
 % Beta discussion
-Finally, the $\beta$ parameter controls the strength of the KL regularization in the loss function and, therefore, the balance between reconstruction fidelity and latent-space structure. Higher values force the model to impose a tighter, more organised latent space, at the expense of losing some fine-scale details in the reconstructions. In our case, $\beta \approx 6$ suggests that a strongly regularised latent representation is more beneficial for the task than capturing every small feature in the input data. This indicates that the model gains more from enforcing a well-structured latent space than from preserving high-resolution details during reconstruction. This is clear in Fig.~\ref{fig:latent_space}a, where the latent-space covariance matrix is nearly diagonal, indicating that the latent variables are uncorrelated. This structure suggests that each dimension captures a distinct component of the underlying variability, which is consistent with a more disentangled and well-regularized latent representation. Further details are provided in Sect.~\ref{sec:psd}.
+In addition, Fig.~\ref{fig:boxplot} shows the impact of the $\beta$ parameter, which controls the strength of the KL regularization in the loss function and, therefore, the balance between reconstruction fidelity and latent-space structure. Higher values force the model to impose a tighter, more organised latent space, at the expense of losing some fine-scale details in the reconstructions. In our case, $\beta \approx 6$ suggests that a strongly regularised latent representation is more beneficial for the task than capturing every small feature in the input data. This indicates that the model gains more from enforcing a well-structured latent space than from preserving high-resolution details during reconstruction. This is clear in Fig.~\ref{fig:latent_space}a, where the latent-space covariance matrix is nearly diagonal, indicating that the latent variables are uncorrelated. This structure suggests that each dimension captures a distinct component of the underlying variability, which is consistent with a more disentangled and well-regularized latent representation. Further details are provided in Sect.~\ref{sec:psd}.
 %
 %Increasing the dimensionality, and consequently the number of parameters, may cause the neural network to learn artificial or noisy patterns. Similarly, increased dimensionality may slow convergence, requiring more iterations before stabilisation is achieved.
 
@@ -415,7 +417,7 @@ A summary of the metrics is shown in Table~\ref{tab:metrics}. Metrics are comput
 
 \subsection{Probability distributions}
 An important aspect in hazard and impact assessment is to evaluate exceedance probabilities, \ie the probability that a specific hazardous threshold is exceeded within a given time frame. In the context of ensemble modelling, probability distribution estimations 
-can suffer from sampling errors, particularly when small ensembles are considered. Figure~\ref{fig:exceedance} shows the exceedance probabilities for different ash column mass thresholds, illustrating how the VAE is also able to generate realistic sets of samples with the correct probability distribution.
+can suffer from sampling errors, particularly when small ensembles are considered. Figure~\ref{fig:exceedance} presents the exceedance probabilities for three different thresholds, demonstrating that the VAE is capable of generating accurate probability distributions as well as realistic samples.
 
 \begin{figure*}[ht]
   \centering
@@ -449,11 +451,11 @@ In order to examine whether the sampled ensemble provides a good approximation t
   \label{fig:histograms}
 \end{figure*}
 
-Naturally, the VAE capacity to approximate the distribution depends on the number of samples generated. In order to assess the quality of the approximation for different amounts of samples, the JS divergence ($JSD$, see Eq.~\eqref{eq:js}) was computed from discrete probability distributions. Specifically, $JSD$ was obtained from histograms with a fixed range (128 bins between 0 and 40 $g~m^{-2}$) for each grid cell.
+Naturally, the VAE capacity to approximate the distribution depends on the number of samples generated. In order to assess the quality of the approximation for different amounts of samples, the JS divergence was computed from discrete probability distributions using~\eqref{eq:js}. Specifically, $JSD$ was obtained from histograms with a fixed range (128 bins between 0 and 40 $g~m^{-2}$) for each grid cell.
 %
-As a measure of the worst-case conditions, the 99th percentile of the grid‐cell values is reported in Fig.~\ref{fig:js_divergence}, taken as a robust estimation of the maximum $JSD$ over the domain. The results for multiple VAE-generated ensemble sizes are compared with the training dataset $JSD$.
+As a measure of the worst-case conditions, the 99th percentile of the grid‐cell values is reported in Fig.~\ref{fig:js_divergence}, taken as a robust estimation of the maximum $JSD$ over the domain. The results for multiple VAE-generated ensemble sizes are compared with the training dataset.
 %
-As expected, VAE improves the training distribution only for large ensemble sizes ($M\gtrsim 256$), reaching an asymptotic value of approximately $JSD \sim 0.042$, which represents a 2.6x improvement over the training metric ($JSD=0.11$).
+As expected, VAE improves the training distribution only for large ensemble sizes ($M\gtrsim 256$), reaching an asymptotic value of approximately $JSD \sim 0.042$, which represents a 2.6x improvement over the corresponding training metric ($JSD=0.11$).
 %
 %for each grid cell. The discrete probability distributions are estimated from histograms () and $JSD$ computed against the test dataset distribution. Figure~\ref{fig:js_divergence} shows the $JSD$ for multiple VAE-generated ensemble sizes. The 99th percentile is reported as a measure of the worst-case scenario. For reference, $JSD$ for the training dataset is also shown. 
 
@@ -495,11 +497,11 @@ Finally, this behaviour is consistent with the disentangled latent representatio
   \includegraphics[width=0.45\textwidth]{f10}
   \caption{%
     The isotropic power spectrum, \ie radially averaged 
-    two-dimensional Power Spectral Density, 
+    two-dimensional Power Spectral Density (PSD), 
     reveals inconsistencies in the spatial structure of 
-    the samples generated by the VAE. 
+    the VAE-generated samples. 
     The generative model reproduces large scales but fails 
-    at scales smaller since the AI model is introducing 
+    at scales smaller since the VAE is introducing 
     artificial noise for large k. Since the wavenumber 
     is expressed in terms of the grid size, $\Delta x$, 
     we can conclude that the VAE is unable to reproduce 
@@ -512,11 +514,11 @@ Finally, this behaviour is consistent with the disentangled latent representatio
 \conclusions \label{sec:conclusions}
 %
 % Short summary
-This paper has untapped the use of generative AI modelling for atmospheric transport of volcanic clouds. As a pioneer step, we proposed a simple approach based on a convolutional Variational Autoencoder (VAE), a type of ML model capable of learning a probabilistic representation of data in a low dimensional latent space and generate new data (samples) similar to those of a physical model.
+This paper has untapped the use of generative AI modelling for atmospheric transport of volcanic clouds. As a pioneer step, we proposed a simple approach based on a convolutional Variational Autoencoder (VAE), a type of ML model capable of learning a probabilistic representation of data in a low dimensional latent space and generate new data (samples) similar to those simulated by a physical model.
 
 %
 % Main results
-Numerical simulations in geophysics can be highly demanding in terms of computational resources. For example, the ensemble simulations for the test dataset used in this work were run on the LUMI supercomputer using 2048 GPUs. 
+Numerical simulations in geophysics can be highly demanding in terms of computational resources. For example, the ensemble simulation for the test dataset used in this work was run on the LUMI supercomputer using 2048 GPUs. 
 %
 % Computational burden
 With the proposed methodology, it is possible to generate thousands of new physics-grounded samples with statistical properties close to the true (model) in very short times using just a personal computer. 
@@ -528,7 +530,7 @@ Compared to the training dataset, VAE can provide a better approximation to the 
 However, as expected, the training data exhibits superior performance to the VAE across nearly all statistical metrics considered in this work. However, the VAE-generated ensemble still provides a really good approximation of the ensemble mean, spread and probabilities of exceedance. 
 %
 % Discussion
-For example, the typical VAE error in relative terms was found to be around $3.4\%$ for the ensemble mean, while the training error was $1.78\%$ on average. This is negligible compared to typical errors found when model forecasts are compared with observations (\ie, satellite retrievals or ground-based measurements). 
+For example, the typical VAE error in relative terms was found to be around $3.4\%$ for the ensemble mean, while the training error was $1.78\%$ on average. This is negligible compared to typical errors found when model forecasts are compared with observations (\ie, satellite retrievals or ground-based measurements) in real applications. 
 
 %
 % Conclusions
