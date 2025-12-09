@@ -1,6 +1,6 @@
 % vim: set textwidth=0:
 %
-\documentclass[acp]{copernicus}
+\documentclass[acp,manuscript]{copernicus}
 \usepackage{xspace}
 \usepackage{bm}
 
@@ -35,15 +35,15 @@
 \maketitle
 
 \begin{abstract}
-Ensemble-based modelling of the atmospheric dispersal of volcanic clouds enables more realistic forecasts by explicitly accounting for uncertainties in eruption source parameters (ESPs), meteorological data, and systematic errors in atmospheric transport models.
+Ensemble-based modelling of the atmospheric dispersal of volcanic clouds enables more realistic forecasts by explicitly accounting for uncertainties in eruption source parameters, meteorological data, and systematic errors in transport models.
 %
-Most of the ensemble applications, such as quantification of forecast uncertainties, data assimilation, or probabilistic hazard assessments, require a large number of ensemble members to mitigate sampling errors and to properly capture probability distributions. 
+Many ensemble applications, including quantification of forecast uncertainties, data assimilation, or probabilistic hazard assessments, require a large number of members to mitigate sampling errors and to properly capture probability distributions. 
 %
-However, running large ensembles (hundreds to thousands of members) with Volcanic Ash Transport and Dispersal (VATD) models can be computationally demanding, even for High-Performance Computing (HPC) clusters. As a result, operational forecasting is typically restricted to smaller ensembles in order to fit time-to-solution requirements. In contrast, generative AI models can produce large volumes of physically-consistent data samples with minimal computational cost. 
+However, running large ensembles with Volcanic Ash Transport and Dispersal (VATD) models can be computationally demanding, even for high-performance computing clusters. As a result, operational forecasting is typically restricted to smaller ensembles in order to fit time-to-solution requirements. In contrast, generative AI models can produce large volumes of physically-consistent data samples with minimal computational cost. 
 %
 In this work, a convolutional Variational AutoEncoder (VAE) is trained on an ensemble of 256 forecasts simulated with the FALL3D model and subsequently used to generate larger ensembles, effectively augmenting physics-based ensemble modelling capacity. Ensembles with up to 8192 members were generated nearly instantaneously using the trained neural network, with no reliance on HPC resources.
 %
-The statistical properties of the expanded ensembles are characterised in detail and the performance of the VAE is evaluated against a test dataset composed of 2048 numerical simulations. The VAE-generated ensembles closely approximate the actual (target) probability distribution as well as key sample statistics, such as the ensemble mean and spread with minimal degradation in the evaluation metrics.
+The statistical properties of the expanded ensembles are characterised in detail, and the VAE performance is evaluated against a test dataset composed of 2048 numerical simulations. The VAE-generated ensembles closely approximate the actual (target) probability distribution as well as key sample statistics, such as ensemble mean and spread, with minimal degradation in the evaluation metrics.
 %
 Finally, we discuss possible future applications of this work, including latent space data assimilation via deep learning.
 \end{abstract}
