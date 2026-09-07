@@ -1,14 +1,18 @@
-% vim: set textwidth=0:
-%
 \documentclass[acp,manuscript]{copernicus}
 \usepackage{xspace}
 \usepackage{bm}
 
-\newcommand*{\eg}{e.g.\@\xspace}
-\newcommand*{\ie}{i.e.\@\xspace}
 \graphicspath{{figs/}}
 
-%\includeonly{sections/experiments}
+\newcommand*{\eg}{e.g.\@\xspace}
+\newcommand*{\ie}{i.e.\@\xspace}
+
+\newcommand{\ensembleSize}{\ensuremath{N_E}}
+\newcommand{\latentDim}{\ensuremath{K}}
+\newcommand{\spaceDim}{\ensuremath{N}}
+\newcommand{\obsDim}{\ensuremath{M}}
+
+%\includeonly{sections/results}
 
 \begin{document}
 
@@ -47,7 +51,7 @@ However, running large ensembles with Volcanic Ash Transport and Dispersal (VATD
 %
 In this work, a convolutional Variational AutoEncoder (VAE) is trained on an ensemble of 256 forecasts simulated with the FALL3D model and subsequently used to generate larger ensembles, effectively augmenting physics-based ensemble modelling capacity. Ensembles with up to 8192 members were generated nearly instantaneously using the trained neural network, with no reliance on HPC resources.
 %
-The statistical properties of the expanded ensembles are characterised in detail, and the VAE performance is evaluated against a test dataset composed of 2048 numerical simulations. The VAE-generated ensembles closely approximate the actual (target) probability distribution as well as key sample statistics, such as ensemble mean and spread. Quantitatively, the generated ensembles achieve a Mean Absolute Percentage Error (MAPE) of 3.4 ± 0.6\% for the ensemble mean, compared to 1.78\% for the training dataset, while maintaining low RMSE values (0.20 ± 0.03). Although errors are higher than those of the training dataset, these results indicate only moderate degradation despite training on a significantly smaller ensemble.
+The statistical properties of the expanded ensembles are characterised in detail, and the VAE performance is evaluated against a test dataset composed of 2048 numerical simulations. The VAE-generated ensembles closely approximate the actual (target) probability distribution as well as key sample statistics, such as ensemble mean and spread. Quantitatively, the generated ensembles achieve a Mean Absolute Percentage Error (MAPE) of $3.4 \pm 0.6\%$ for the ensemble mean, compared to 1.78\% for the training dataset, while maintaining low RMSE values ($0.20 \pm 0.03$). Although errors are higher than those of the training dataset, these results indicate only moderate degradation despite training on a significantly smaller ensemble.
 %
 Finally, we discuss possible future applications of this work, including latent space data assimilation via deep learning.
 \end{abstract}

@@ -100,7 +100,7 @@ However, the next section shows that the VAE can better reproduce other statisti
   \label{tab:metrics}
   \begin{tabular}{lccc}
     \tophline
-    Metric    & Variable  & Training dataset  & VAE (2048 samples) \\ \middlehline
+    Metric    & Variable  & Training dataset  & VAE (5000 samples) \\ \middlehline
     RMSE      & Mean      & 0.108             & $0.20  \pm 0.03$   \\
     MBE       & Mean      & 0.001             & $-0.04 \pm 0.02$   \\
     MAPE (\%) & Mean      & 1.784             & $3.4   \pm 0.6$    \\ \middlehline
@@ -111,9 +111,188 @@ However, the next section shows that the VAE can better reproduce other statisti
   \belowtable{ In units of \unit{g\,m^{-2}}, except MAPE (\%). }
 \end{table}
 
+\subsubsection{Probability distributions}
+An important aspect in hazard and impact assessment is to evaluate exceedance probabilities, \ie the probability that a specific hazardous threshold is exceeded within a given time frame. In the context of ensemble modelling, probability distribution estimations can suffer from sampling errors, particularly when small ensembles are considered. Figure~\ref{fig:exceedance} presents the exceedance probabilities for three different thresholds, demonstrating that the VAE is capable of generating accurate probability distributions as well as realistic samples.
+%
+In order to examine whether the sampled ensemble provides a good approximation to the target distribution, a few histograms are shown in Fig.~\ref{fig:histograms} at four selected locations, comparing results for the training dataset (left column) and a VAE ensemble with 5000 samples (right column), considering 128 bins between the minimum and maximum values for each location. As expected, the distribution estimated from the training dataset with a small ensemble size ($N_e=256$) results in a very noisy distribution, while the VAE distribution provides a good approximation to the test dataset distribution, even for multimodal distributions (\eg, Fig.~\ref{fig:histograms}a).
+
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{f06}
+  \caption{%
+    Exceedance probabilities for three ash column mass thresholds (8, 16 and 20~$g~m^{-2}$ from top to bottom). 
+    The probability contours correspond to $2\%$, $25\%$, $50\%$, $75\%$ and $98\%$.
+    Results for the training dataset (left column) and a VAE-generated ensemble with 5000 samples (central column) are compared to the test dataset target (right column).
+    }
+  \label{fig:exceedance}
+\end{figure*}
+
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{f07}
+    \caption{
+      Histograms for the training dataset (256 samples, left column) and a 
+      VAE-generated ensemble (5000 samples, right column) at different locations. 
+      The results are compared against the test dataset (2048 samples), 
+      assumed to be the reference target (yellow shaded area). 
+      For illustrative purposes, four sampling locations were selected: 
+      P1 at 15.5\degree\,W, 26.3\degree\,N \textbf{(a, b)}; 
+      P2 at 16.8\degree\,W, 25.9\degree\,N \textbf{(c, d)}; 
+      P3 at 15.0\degree\,W, 27.3\degree\,N \textbf{(e, f)}; and 
+      P4 at 15.5\degree\,W, 27.4\degree\,N \textbf{(g, h)}.
+    }
+  \label{fig:histograms}
+\end{figure*}
+
+Naturally, the VAE capacity to approximate the distribution depends on the number of samples generated. In order to assess the quality of the approximation for different amounts of samples, the JS divergence was computed from discrete probability distributions using~\eqref{eq:js}. Specifically, $JSD$ was obtained from histograms with a fixed range (128 bins between 0 and 40 $g~m^{-2}$) for each grid cell. As a measure of the worst-case conditions, the 99th percentile of the grid‐cell values is reported in Fig.~\ref{fig:js_divergence}, taken as a robust estimation of the maximum $JSD$ over the domain. The results for multiple VAE-generated ensemble sizes are compared with the training dataset. As expected, VAE improves the training distribution only for large ensemble sizes ($N_e\gtrsim 256$), reaching an asymptotic value of approximately $JSD \sim 0.042$, which represents a 2.6x improvement over the corresponding training metric ($JSD=0.11$).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{f08}
+  \caption{%
+    The Jensen-Shannon (JS) divergence was computed for each grid cell 
+    considering different sizes of the VAE-generated ensemble.
+    The 99th percentile is reported as a worst-case measure of performance.
+    Low values indicate a good approximation to the actual probability distribution. 
+    The result for the training dataset is also indicated for reference.
+    }
+  \label{fig:js_divergence}
+\end{figure}
+
+\subsubsection{Isotropic power spectrum} \label{sec:psd}
+%
+% PSD, general description
+%
+The isotropic power spectrum, \ie the radially averaged two-dimensional Power Spectral Density (PSD), was computed using \eqref{eq:psd}. Figure~\ref{fig:psd} presents the results for the test dataset and VAE, averaged over multiple ensemble realizations (each ensemble with $N_e=5000$ samples). It is worth noting that, instead of the classical energy cascade spectrum according to $\propto k^{-5/3}$, the test dataset exhibits an exponential decay (solid red line), likely due to the diffusion processes introduced by the dispersal model FALL3D. The generative model, with a strongly regularized latent space, reproduces well the large scales but fails at smaller scales, as shown in Fig.~\ref{fig:psd} (green triangles).
+%
+% High frequency noise
+%
+The isotropic power spectrum deviates from the exponential decay for wavenumbers above $\sim 0.3~\Delta x^{-1}$, approximately, where $\Delta x$ is the grid size. In other words, the VAE is unable to reproduce variability at spatial scales below $\sim 3~\Delta x$. The flat high-wavenumber tail in the 2D power spectrum seems to be related to the convolutional kernel size used in this work (\ie, $3\times 3$) and the limitations of the decoder upsampling. Our decoder architecture is based on transposed convolution layers, and it is widely known that transposed convolutions usually lead to chequerboard artifacts. Actually, this effect can also be observed from the bias map of the ensemble mean (Fig.~\ref{fig:mean}d), where a noisy pattern with relatively low intensity and high-frequency structure can be identified.
+%
+% Kernel size
+%
+A new neural network was trained using a larger kernel size ($5\times 5$) in order to investigate whether it yields to a more effective low-pass filtering (blue crosses in Fig.~\ref{fig:psd}). Although the background noise was reduced slightly, the results remained almost identical. Future work should investigate more advanced neural network architectures to better address this limitation.
+%
+% High beta
+%
+Finally, this behaviour is consistent with the disentangled latent representation enforced by a high value of the $\beta$ hyperparameter (see Fig.~\ref{fig:boxplot}). In fact, the VAE learns a smooth, structured encoding that preserves the dominant generative factors while filtering out small-scale variations that would otherwise help reduce the reconstruction error. The effects of this strongly regularized latent space are also visible in the spectral analysis. While the VAE successfully reproduces the low-frequency components associated with large-scale structures, it systematically underestimates the high-frequency content responsible for fine-scale details. 
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{f09}
+  \caption{%
+    The isotropic power spectrum, \ie radially averaged 
+    two-dimensional Power Spectral Density (PSD), 
+    reveals inconsistencies in the spatial structure of 
+    the VAE-generated samples. 
+    The generative model reproduces large scales but fails 
+    at scales smaller since the VAE is introducing 
+    artificial noise for large k. Since the wavenumber 
+    is expressed in terms of the grid size, $\Delta x$, 
+    we can conclude that the VAE is unable to reproduce 
+    the variability over spatial scales below 
+    $\sim 3~\Delta x$, approximately. 
+    }
+  \label{fig:psd}
+\end{figure}
+
 \subsection{Latent-space assimilation of satellite observations} \label{sec:res:da}
-The agreement with observations is evaluated in terms of a few complementary metrics. The metrics are computed for every ensemble member and the ensemble average is reported. The root mean square error (RMSE) measures the magnitude of the differences between the estimated and reference fields,
-where the reference field is given by the observations, $\mathbf{\hat{y}} \equiv \mathbf{y}_{\mathrm{obs}}$, and the average is taken over the $m$ observation points. 
+This section shows the results of the latent-space data assimilation for the Etna experiment described in Sect.~\ref{sec:experiments}. Figure~\ref{fig:etna2018}a shows the ensemble mean of the model prior ($\ensembleSize=128$), \ie the ensemble of two-dimensional ash column mass simulated with the dispersal model FALL3D. The corresponding satellite retrievals at 18:00~UTC from SEVIRI are shown in Fig.~\ref{fig:etna2018}b. The relatively complex spatial structure of the observed plume results from a pronounced clockwise rotation (veering) of its trajectory during the initial phase of the eruption. This change in flow direction is not captured by the driving meteorological dataset, which leads FALL3D to simulate ash transport under a largely uniform directional flow. Consequently, this case represents a challenging test for the data assimilation framework.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{f10}
+  \caption{%
+    Spatial distribution of ash column mass at 18:00~UTC for the Etna 24 December 2018 case for 
+    \textbf{(a)} the ensemble mean of the model prior, 
+    \textbf{(b)} the SEVIRI satellite retrievals, 
+    \textbf{(c)} the ETKF posterior ensemble mean, and 
+    \textbf{(d)} the PF posterior ensemble mean. 
+    The red box shows the FALL3D model domain extent.
+    }
+  \label{fig:etna2018}
+\end{figure}
+
+\subsubsection{VAE prior}
+The simulated model prior is used to train a new VAE, which is subsequently used to generate an augmented ensemble (VAE prior) by sampling from the latent space. The same procedure and neural network architecture used for the synthetic experiments are employed for the Etna experiment, with a few exceptions:
+(i) to accommodate the increased size of the input data, the latent dimension was increased to $\latentDim=32$ and a new convolutional layer was added to both the encoder and decoder;
+(ii) we found that the checkerboard pattern can be reduced by replacing transposed convolutional upsampling with bilinear interpolation; and 
+(iii) rather than sampling the latent variables from a standard normal distribution, the latent vectors are sampled from a multivariate normal distribution,
+\begin{equation}
+\mathbf{z}_i \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma}),
+\end{equation}
+where $\boldsymbol{\mu}$ and $\boldsymbol{\Sigma}$ are estimated from the latent representations of the training ensemble. The VAE prior is then generated by sampling $\ensembleSize=4096$ latent vectors $\mathbf{z}_i$ from this distribution.
+
+The agreement with the satellite observations is evaluated using the metrics defined in Sect.~\ref{sec:metrics}. Table~\ref{tab:rmse_metrics} compares the model prior and VAE prior against the satellite observations, providing a baseline for assessing the impact introduced by the data assimilation. The metrics are computed for every ensemble member and the ensemble average is reported. Both model and VAE ensembles show very similar performance across all metrics, with the VAE prior yielding slightly better RMSE, RMSLE and Pearson correlation. These results indicate that the VAE-generated ensemble preserves the main characteristics of the model prior relevant to the comparison with observations. The results are also consistent with the previous analysis, showing that the VAE can generate samples that are statistically comparable to those produced by the physics-based FALL3D model. These results also show that the VAE-generated ensemble provides a suitable prior for the subsequent data assimilation experiments.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Metrics used to quantify agreement with observations for the Etna data assimilation experiment.}
+    \label{tab:rmse_metrics}
+    \begin{tabular}{lcccc}
+        \tophline
+         & Prior   & Prior & Posterior & Posterior \\
+         & (model) & (VAE) & (ETKF)    & (PF) \\ \middlehline
+        RMSE & 180.317 & 173.562 & 145.696 & 126.903 \\
+        RMSLE & 1.561 & 1.491 & 1.228 & 1.210 \\
+        Pearson correlation & 0.315 & 0.339 & 0.700 & 0.667 \\
+        POD & 0.278 & 0.274 & 0.381 & 0.378 \\
+        Jaccard index & 0.229 & 0.227 & 0.325 & 0.333 \\
+        \bottomhline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Data assimilation experiments}
+%
+% Spatial results
+%
+The analysis ensemble means obtained with the ETKF (Fig.~\ref{fig:etna2018}c) and PF (Fig.~\ref{fig:etna2018}d) show that both the intensity and location of the maximum are corrected relative to the prior. However, the analysis ensembles retain the lack of representation of the veering and wind shear present in the prior, resulting in an almost unidirectional and less extended plume. This illustrates an important limitation of the assimilation: the analysis can preferentially select and combine ensemble members that are more consistent with the observations, but cannot recover spatial structures that are not represented in the prior ensemble.
+%
+% Quantitative improvement
+%
+The impact of the assimilation can be assessed in terms of the evaluation metrics reported in Table~\ref{tab:rmse_metrics}. These diagnostics are not intended as an independent validation, but rather to characterize the adjustment of the prior ensemble towards the observational constraints. The agreement with the observations improves for all metrics following assimilation. The RMSE is reduced by 16\% (ETKF) and 27\% (PF) relative to the VAE prior, while the RMSLE decreases by 18\% (ETKF) and 19\% (PF). The Pearson correlation approximately doubles for both methods. A larger relative improvement is obtained for the categorical metrics: the ETKF increases the POD and Jaccard index by 39\% and 43\%, respectively, while the corresponding increases for the PF are 38\% and 47\%. Overall, both assimilation approaches consistently adjust the ensemble towards the observations, with comparable performance across the different metrics considered.
+
+%
+% Ensemble spread
+%
+The impact of the assimilation can also be assessed in terms of the ensemble spread. The ensemble spread quantifies the dispersion of the ensemble members around the mean and is computed as the ensemble standard deviation at each element, averaged over all elements. The resulting spreads for the prior and posterior ensembles are reported in Table~\ref{tab:spread_metrics}. This metric is evaluated both in physical space and in latent space.
+%
+% PF collapse
+%
+The spread reduction in latent space is 10\% (ETKF) and 42\% (PF). The substantially lower PF spread results from particle-filter degeneracy, with nearly all posterior probability concentrated on only two particles. Kernel perturbation is subsequently used to increase ensemble diversity, with a regularization factor of $h=0.2$ (see Sect.~\ref{sec:pf}). Interestingly, the spread reduction in physical space is more pronounced for the ETKF (77\%) than for the PF (70\%), despite the substantially larger reduction observed for the PF in latent space.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Ensemble spread of the prior and posterior ensembles in latent and physical space}
+    \label{tab:spread_metrics}
+    \begin{tabular}{lrr}
+        \tophline
+        ~              & Latent-space spread & Physical-space spread \\ \middlehline
+        VAE Prior      & 0.999 & 33.974 \\
+        ETKF Posterior & 0.899 & 7.804 \\
+        PF Posterior   & 0.582 & 10.351 \\
+        \bottomhline
+    \end{tabular}
+\end{table}
+
+%
+% Latent-space distributions
+%
+The latent-space distributions of the prior and posterior ensembles are shown in Fig.~\ref{fig:latent-distribution} for selected pairs of latent dimensions, together with their corresponding histograms. In general, the prior distribution is well approximated by the standard normal distribution, as expected from the VAE construction. The ETKF produces a Gaussian-like posterior, whereas the PF analysis is clearly bimodal, reflecting the concentration of the posterior weights on two particles during the initial filter update. The subsequent kernel perturbation broadens these two modes, restoring some variability.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\linewidth]{f11.png}
+    \caption{
+        Latent-space distributions of the prior and posterior ensembles from the data assimilation experiments. Three selected pairs of latent dimensions are shown for illustration. The ensembles, each comprising 4096 members, are: VAE prior (white), ETKF posterior (orange), and PF posterior (green).
+        }
+    \label{fig:latent-distribution}
+\end{figure}
+
 
 \subsection{Discussion} \label{sec:discussion}
-bla
+
+%
+% Data assimilation
+%
+Overall, the assimilation experiments demonstrate the feasibility of performing data assimilation directly in the latent space of a VAE-generated ensemble. Both the ETKF and PF adjust the augmented prior towards the satellite observations, improving the agreement across all considered evaluation metrics and reducing the ensemble spread. Although the two assimilation approaches produce markedly different posterior distributions in latent space, their analyses in physical space are relatively similar. These results demonstrate that latent-space data assimilation can effectively incorporate satellite observations into a large VAE-generated ensemble of a two-dimensional physical variable. Future research is needed to assess whether the methodology can be extended to the full three-dimensional concentration field and multiple particle classes, which will likely require adapting the neural network architecture to the increased dimensionality of the problem. This extension is essential for enabling multiple assimilation cycles and, ultimately, supporting operational forecasting.
