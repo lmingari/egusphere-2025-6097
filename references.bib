@@ -13,7 +13,11 @@
 @STRING{grl={Geophys.\ Res.\ Lett.}}
 @STRING{gmd={Geosci.\ Model Dev.}}
 @STRING{gmdd={Geosci.\ Model Dev.\ Discuss.}}
+@STRING{ieeetsp={{IEEE Trans. Signal Process.}}}
+@STRING{ieeprocf={{IEE Proc.-F, Radar Signal Process.}}}
+@STRING{ijc={{Int. J. Climatol.}}}
 @STRING{james={J.\ Adv.\ Model.\ Earth Sy.}}
+@STRING{jcgs={{J. Comput. Graph. Stat.}}}
 @STRING{jcp={J.\ Comput.\ Phys.}}
 @STRING{jgr={J.\ Geophys.\ Res.}}
 @STRING{jgra={J.\ Geophys.\ Res.-Atmos.}}
@@ -24,9 +28,23 @@
 @STRING{mwr={Mon.\ Weather Rev.}}
 @STRING{nhess={Nat.\ Hazards Earth Syst.\ Sci.}}
 @STRING{phitra={Philos.\ Trans.\ A Math.\ Phys.\ Eng.\ Sci.}}
+@STRING{physd = {{Physica D}}}
+@STRING{qjrms={Q.\ J.\ Roy.\ Meteor.\ Soc.}}
 @STRING{rse={Remote Sens.\ Environ.}}
+@STRING{rs={{Remote Sens.}}}
 @STRING{scirep={Sci.\ Rep.}}
 @STRING{trc={Transp.\ Res.\ Part C-Emerg.\ Technol.}}
+
+@article{arulampalam2002,
+  author={Arulampalam, M.S. and Maskell, S. and Gordon, N. and Clapp, T.},
+  journal=ieeetsp,
+  title={A tutorial on particle filters for online nonlinear/non-Gaussian Bayesian tracking},
+  year={2002},
+  volume={50},
+  number={2},
+  pages={174--188},
+  doi={10.1109/78.978374}
+}
 
 @article{bauer2015,
   title={The quiet revolution of numerical weather prediction},
@@ -86,6 +104,17 @@
     year = {2025}
 }
 
+@article{corradini2020,
+    author = {Corradini, Stefano and Guerrieri, Lorenzo and Stelitano, Dario and Salerno, Giuseppe and Scollo, Simona and Merucci, Luca and Prestifilippo, Michele and Musacchio, Massimo and Silvestri, Malvina and Lombardo, Valerio and Caltabiano, Tommaso},
+    title = {Near Real-Time Monitoring of the Christmas 2018 Etna Eruption Using SEVIRI and Products Validation},
+    journal = rs,
+    volume = {12},
+    year = {2020},
+    number = {8},
+    article-number = {1336},
+    doi = {10.3390/rs12081336}
+}
+
 @article{corradino2024,
     author = {Claudia Corradino and Paul Jouve and Alessandro {La Spina} and Ciro {Del Negro}},
     title = {Monitoring Earth's atmosphere with Sentinel-5 TROPOMI and Artificial Intelligence: Quantifying volcanic SO2 emissions},
@@ -128,6 +157,27 @@
     year = {2012}
 }
 
+@InCollection{doucet2001,
+    author    = "Doucet, Arnaud and de Freitas, Nando and Gordon, Neil",
+    editor    = "Doucet, Arnaud and de Freitas, Nando and Gordon, Neil",
+    title     = "An Introduction to Sequential Monte Carlo Methods",
+    booktitle = "Sequential Monte Carlo Methods in Practice",
+    publisher = "Springer",
+    address   = "New York, NY",
+    year      = "2001",
+    pages     = "3--14",
+    doi       = "10.1007/978-1-4757-3437-9_1",
+}
+
+@techreport{european_commission2025,
+  author      = {{European Commission}},
+  title       = {Field exercises for {EUCPT} and {TAST} ``{Cycle 12}'' -- {Lot 4}: {EU-MODEX} Tenerife},
+  institution = {Union Civil Protection Knowledge Network},
+  year        = {2025},
+  type        = {Project Brief},
+  url         = {https://civil-protection-knowledge-network.europa.eu/projects/field-exercises-eucpt-and-tast-cycle-12}
+}
+
 @article{folch2020,
     author = {Folch, A. and Mingari, L. and Gutierrez, N. and Hanzich, M. and Macedonio, G. and Costa, A.},
     title = {FALL3D-8.0: a computational model for atmospheric transport and deposition of particles, aerosols and radionuclides -- Part 1: Model physics and numerics},
@@ -149,18 +199,17 @@
     doi = {10.3389/feart.2021.741841}
 }
 
-@inbook{folch2023, 
-    author     = {Folch, Arnau and Mingari, Leonardo}, 
-    title      = {Data Assimilation of Volcanic Clouds: Recent Advances and Implications on Operational Forecasts},
-    booktitle  = {Applications of Data Assimilation and Inverse Problems in the Earth Sciences}, 
-    publisher  = {Cambridge University Press}, 
-    year       = {2023}, 
-    editor     = {Ismail-Zadeh, Alik and Castelli, Fabio and Jones, Dylan and Sanchez, SabrinaEditors}, 
-    pages      = {144--156}, 
-    place      = {Cambridge}, 
-    series     = {Special Publications of the International Union of Geodesy and Geophysics},
-    collection = {Special Publications of the International Union of Geodesy and Geophysics}
-} 
+@incollection{folch2023,
+    author    = {Folch, Arnau and Mingari, Leonardo},
+    title     = {Data Assimilation of Volcanic Clouds: Recent Advances and Implications on Operational Forecasts},
+    booktitle = {Applications of Data Assimilation and Inverse Problems in the Earth Sciences},
+    publisher = {Cambridge University Press},
+    year      = {2023},
+    editor    = {Ismail-Zadeh, Alik and Castelli, Fabio and Jones, Dylan and Sanchez, Sabrina},
+    pages     = {144--156},
+    address   = {Cambridge},
+    series    = {Special Publications of the International Union of Geodesy and Geophysics}
+}
 
 @article{folch2023b,
   title     = {The EU Center of Excellence for Exascale in Solid Earth (ChEESE): Implementation, results, and roadmap for the second phase},
@@ -172,18 +221,18 @@
   doi       = {j.future.2023.04.006}
 }
 
-@software{folch2025,
+@misc{folch2025,
   author       = {Folch, Arnau and
                   Costa, Antonio and
                   Macedonio, Giovanni and
                   Mingari, Leonardo and
                   Pascual Saldaña, Heribert},
-  title        = {FALL3D},
+  title        = {FALL3D (Version 9.1.0)},
   month        = nov,
   year         = 2025,
   publisher    = {Zenodo},
-  version      = {9.1.0},
-  doi          = {10.5281/zenodo.17737081}
+  doi          = {10.5281/zenodo.17737081},
+  howpublished = {Zenodo}
 }
 
 @article{fu2016,
@@ -226,6 +275,17 @@
     year={2016}
 }
 
+@article{gordon1993,
+    author = {N.J. Gordon  and D.J. Salmond  and A.F.M. Smith },
+    title = {Novel approach to nonlinear/non-Gaussian Bayesian state estimation},
+    journal = ieeprocf,
+    volume = {140},
+    issue = {2},
+    pages = {107-113},
+    year = {1993},
+    doi = {10.1049/ip-f-2.1993.0015},
+}
+
 @article {govett2024,
     author = "Mark Govett and Bubacar Bah and Peter Bauer and Dominique Berod and Veronique Bouchet and Susanna Corti and Chris Davis and Yihong Duan and Tim Graham and Yuki Honda and Adrian Hines and Michel Jean and Junishi Ishida and Bryan Lawrence and Jian Li and Juerg Luterbacher and Chiasi Muroi and Kris Rowe and Martin Schultz and Martin Visbeck and Keith Williams",
     title = "Exascale Computing and Data Handling: Challenges and Opportunities for Weather and Climate Prediction",
@@ -237,6 +297,28 @@
     number = "12",
     doi = "10.1175/BAMS-D-23-0220.1",
     pages = "E2385--E2404"
+}
+
+@article{hunt2007,
+    author = "Brian R. Hunt and Eric J. Kostelich and Istvan Szunyogh",
+    title = "Efficient data assimilation for spatiotemporal chaos: A local ensemble transform Kalman filter",
+    journal = physd,
+    volume = "230",
+    number = "1",
+    pages = "112--126",
+    year = "2007",
+    doi = "10.1016/j.physd.2006.11.008",
+}
+
+@article{husak2007,
+    author = {Husak, Gregory J. and Michaelsen, Joel and Funk, Chris},
+    title = {Use of the gamma distribution to represent monthly rainfall in Africa for drought monitoring applications},
+    journal = ijc,
+    volume = {27},
+    number = {7},
+    pages = {935--944},
+    doi = {10.1002/joc.1441},
+    year = {2007}
 }
 
 @book{kalnay2003,
@@ -264,6 +346,29 @@
   author={Kingma, Diederik P and Welling, Max},
   journal={arXiv preprint arXiv:1312.6114},
   year={2013}
+}
+
+@article{kitagawa1996,
+    author = {Genshiro Kitagawa},
+    title = {Monte Carlo Filter and Smoother for Non-Gaussian Nonlinear State Space Models},
+    journal = jcgs,
+    volume = {5},
+    number = {1},
+    pages = {1--25},
+    year = {1996},
+    publisher = {Taylor \& Francis},
+    doi = {10.1080/10618600.1996.10474692},
+}
+
+@article{kliewer2016,
+    author = {Kliewer, A. J. and Fletcher, S. J. and Jones, A. S. and Forsythe, J. M.},
+    title = {Comparison of Gaussian, logarithmic transform and mixed Gaussian–log-normal distribution based 1DVAR microwave temperature–water-vapour mixing ratio retrievals},
+    journal = qjrms,
+    volume = {142},
+    number = {694},
+    pages = {274--286},
+    doi = {10.1002/qj.2651},
+    year = {2016}
 }
 
 @article{leutbecher2008,
@@ -334,6 +439,28 @@
     doi = {10.5194/acp-22-1773-2022}
 }
 
+@article{mingari2023,
+    author = {Mingari, L. and Costa, A. and Macedonio, G. and Folch, A.},
+    title = {Reconstructing tephra fall deposits via ensemble-based data assimilation techniques},
+    journal = gmd,
+    volume = {16},
+    year = {2023},
+    number = {12},
+    pages = {3459--3478},
+    doi = {10.5194/gmd-16-3459-2023}
+}
+
+@article{oneill2000,
+    author = {O'Neill, N. T. and Ignatov, A. and Holben, B. N. and Eck, T. F.},
+    title = {The lognormal distribution as a reference for reporting aerosol optical depth statistics; Empirical tests using multi-year, multi-site AERONET Sunphotometer data},
+    journal = grl,
+    volume = {27},
+    number = {20},
+    pages = {3333--3336},
+    doi = {10.1029/2000GL011581},
+    year = {2000}
+}
+
 @article{osores2020,
     author = {Osores, S. and Ruiz, J. and Folch, A. and Collini, E.},
     title = {Volcanic ash forecast using ensemble-based data assimilation: an ensemble transform Kalman filter coupled with the FALL3D-7.2 model (ETKF--FALL3D version 1.0)},
@@ -386,6 +513,19 @@
     doi = "10.1016/j.jvolgeores.2004.09.001",
 }
 
+@article {pham2001,
+  author = "Dinh Tuan Pham",
+  title = "Stochastic Methods for Sequential Data Assimilation in Strongly Nonlinear Systems",
+  journal = mwr,
+  year = "2001",
+  publisher = "American Meteorological Society",
+  address = "Boston MA, USA",
+  volume = "129",
+  number = "5",
+  doi = "10.1175/1520-0493(2001)129<1194:SMFSDA>2.0.CO;2",
+  pages = "1194--1207",
+}
+
 @article{poulidis2018,
   title={Meteorological controls on local and regional volcanic ash dispersal},
   author={Poulidis, Alexandros P and Phillips, Jeremy C and Renfrew, Ian A and Barclay, Jenni and Hogg, Andrew and Jenkins, Susanna F and Robertson, Richard and Pyle, David M},
@@ -429,20 +569,17 @@
     doi = {https://doi.org/10.1016/j.jcp.2018.10.045}
 }
 
-@Inbook{sandri2025,
-    author="Sandri, Laura
-    and Tierz, Pablo
-    and Loughlin, Susan C.",
-    editor="Spica, Zack
-    and Caudron, Corentin",
-    title="From Eruptive Histories to Volcano Monitoring: Probabilistic Eruption Forecasting and Volcanic Hazard Assessment at Varying Temporal and Spatial Scales",
-    bookTitle="Modern Volcano Monitoring",
-    year="2025",
-    publisher="Springer Nature Switzerland",
-    address="Cham",
-    pages="365--397",
-    isbn="978-3-031-86841-2",
-    doi="10.1007/978-3-031-86841-2_12"
+@incollection{sandri2025,
+    author    = {Sandri, Laura and Tierz, Pablo and Loughlin, Susan C.},
+    editor    = {Spica, Zack and Caudron, Corentin},
+    title     = {From Eruptive Histories to Volcano Monitoring: Probabilistic Eruption Forecasting and Volcanic Hazard Assessment at Varying Temporal and Spatial Scales},
+    booktitle = {Modern Volcano Monitoring},
+    year      = {2025},
+    publisher = {Springer Nature Switzerland},
+    address   = {Cham},
+    pages     = {365--397},
+    isbn      = {978-3-031-86841-2},
+    doi       = {10.1007/978-3-031-86841-2_12}
 }
 
 @article{stefanescu2014,
@@ -499,6 +636,19 @@
     year = {2024},
     issn = {0377-0273},
     doi = {10.1016/j.jvolgeores.2024.108046}
+}
+
+@article{vanleeuwen2009,
+    author = "Peter Jan van Leeuwen",
+    title = "Particle Filtering in Geophysical Systems",
+    journal = mwr,
+    year = "2009",
+    publisher = "American Meteorological Society",
+    address = "Boston MA, USA",
+    volume = "137",
+    number = "12",
+    doi = "10.1175/2009MWR2835.1",
+    pages = "4089--4114",
 }
 
 @misc{wang2025,

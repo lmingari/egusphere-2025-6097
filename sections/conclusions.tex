@@ -1,0 +1,25 @@
+\conclusions \label{sec:conclusions}
+%
+% Short summary
+This paper has untapped the use of generative AI modelling for atmospheric transport of volcanic clouds. As a pioneer step, we proposed a simple approach based on a convolutional Variational Autoencoder (VAE), a type of ML model capable of learning a probabilistic representation of data in a low dimensional latent space and generate new data (samples) similar to those simulated by a physical model.
+
+%
+% Main results
+Numerical simulations in geophysics can be highly demanding in terms of computational resources. For example, the ensemble simulation for the test dataset used in this work was run on the LUMI supercomputer using 2048 GPUs. 
+%
+% Computational burden
+With the proposed methodology, it is possible to generate thousands of new physics-grounded samples with statistical properties close to the true (model) in very short times using just a personal computer. 
+%
+% Prob. distribution
+Compared to the training dataset, VAE can provide a better approximation to the actual distribution with a 2.6x improvement in terms of the Jensen-Shannon (JS) divergence when large enough ensembles are generated. 
+%
+% Sample statistics
+However, as expected, the training data exhibits superior performance to the VAE across nearly all statistical metrics considered in this work. However, the VAE-generated ensemble still provides a really good approximation of the ensemble mean, spread and probabilities of exceedance. 
+%
+% Discussion
+For example, the typical VAE error in relative terms was found to be around $3.4\%$ for the ensemble mean, while the training error was $1.78\%$ on average. This is negligible compared to typical errors found when model forecasts are compared with observations (\ie, satellite retrievals or ground-based measurements) in real applications. 
+
+%
+% Conclusions
+In summary, this methodology can be extremely useful for ensemble expansion, uncertainty quantification, and surrogate modelling, enabling to approximate the underlying distribution of the training dataset and generate synthetic predictions from it. Furthermore, by enabling latent space data assimilation via deep learning approaches, this methodology has the potential to dramatically reduce forecast errors in operational frameworks.
+
