@@ -7,39 +7,32 @@ Operational forecasts of volcanic ash and \chem{SO_2} clouds rely on physics-bas
 % Model uncertainties
 %
 Specifically, the so-called Eruption Source Parameters (ESPs), such as those required to estimate the vertical distribution of mass along the eruptive column, mass emission rates or particle size distributions, are recognised to be first-order contributors to model errors \citep{costa2016,poulidis2021}. In fact, the determination of the ESPs is one of the major challenges in volcanic plume modelling due to limited real-time observations, complex eruptive dynamics and the rapid variability in emission patterns.
+
 %
 % Ensemble modelling
 %
 Ensemble modelling is a popular approach to deal with the uncertainties associated with model parameters, the spatial distribution and time dependency of emissions or the underpinning meteorological data. Over the years, the increasing availability of High-Performance Computing (HPC) resources has facilitated significantly the use of ensemble approaches across scientific and engineering domains~\citep{wu2021}, particularly in weather forecasting~\citep{toth1997,leutbecher2008,bauer2015}.
 %
-% Ensemble applications: error estimation, hazards studies, data assimilation
+% Ensemble applications: 
+%   * error estimation, 
+%   * hazards studies, 
+%   * data assimilation
 %
 Volcanic cloud forecasting has also benefited from ensemble modelling approaches, especially in areas like uncertainty quantification, hazard assessment and data assimilation. With the help of ensembles, it has been possible to characterise and quantify forecast uncertainties due to poorly constrained input parameters, model errors or uncertain weather data~\citep{stefanescu2014}, expanding upon and beyond traditional forecast products based on deterministic approaches~\citep{folch2022}.
 %
-This is also true for volcanic hazard assessment, another aspect of paramount importance to support long-term risk-based decision-making and short-term emergency management during volcanic crises~\citep{sandri2025}. Probabilistic hazard assessments, in particular, require estimating the probabilities that a given airspace/location will be impacted by a volcanic cloud/fallout~\citep{marzocchi2006}, and a proper probabilistic hazard assessment usually require a large number of numerical simulations \citep{madankan2014,titos2022}.
+This is also true for volcanic hazard assessment, another aspect of paramount importance to support long-term risk-based decision-making and short-term emergency management during volcanic crises~\citep{sandri2025}. Probabilistic hazard assessments, in particular, require estimating the probabilities that a given airspace/location will be impacted by a volcanic cloud~\citep{marzocchi2006}, and a proper probabilistic hazard assessment generally requires a large number of numerical simulations \citep{madankan2014,titos2022}.
+
+%
+% Data assimilation
 %
 On the other hand, forecast errors can be reduced by incorporating observations into numerical models using ensemble-based data assimilation \citep{kalnay2003}. Data Assimilation (DA) techniques have been widely used to study and forecast geophysical systems and have been applied in a variety of research and operational settings~\citep{carrasi2018}. In particular, several ensemble-based methods have been applied to volcanic plume forecasting \citep{folch2023}, including ensemble Kalman filter methods~\citep{fu2016,fu2017,osores2020,pardini2020,mingari2022} and ensemble particle filtering \citep{zidikheri2021,zidikheri2021b}.
+%
+However, data assimilation for volcanic clouds remains challenging due to the strongly non-Gaussian and highly skewed distribution of ash concentrations, which can limit the applicability of methods based on Gaussian assumptions~\citet{mingari2023}. In turn, particle-based approaches can account for such non-Gaussian distributions, but their application to the high-dimensional model state can suffer from severe particle degeneracy~\citet{vanleeuwen2009}.
 
 %
-% Ensembles and computational costs
+% Generative AI
 %
-In all these application examples, the use of large ensembles can be computationally costly, even on HPC clusters, especially in the context of real-time services.
-%
-Operational forecast frameworks must accommodate ensemble sizes to the available computing resources, resulting in ensembles limited to a few tens of members and the corresponding introduction of significant sampling errors \citep{weisheimer2014,berner2017,govett2024}. 
-%
-% Generative AI models
-%
-In contrast, generative AI models have the potential to generate thousands of samples almost instantaneously at very low computational cost. In particular, Machine Learning (ML) algorithms can be trained to generate results consistent with the underlying physical laws, such as those describing atmospheric dispersion and transport of volcanic plumes.
-%
-Some examples of physics-informed generative models preserving the underlying governing physical laws include Physics-Informed Neural Networks (PINNs) \citep{raissi2019,kashinath2021}, Diffusion Models with physical constraints \citep{gao2023,wang2025}, and Generative Adversarial Network (GANs) augmented with conservation laws or physical constraints \citep{yang2020,tretiak2022}. Similarly, the Variarional Autoencoder or VAE~\citep{kingma2013} represents one of the most prominent examples of generative models. A VAE is a type of neural network that learns a probabilistic mapping from a high-dimensional data space to a continuous latent space, which is a lower-dimensional, compressed representation of the original data that captures its most relevant underlying features. This representation enables the reconstruction and synthesis of new states by sampling from the latent space.
-
-
-
-
-%
-% Applications
-%
-%Generative AI models for volcanic clouds constitute a promising research area with broad potential applications, ranging from volcanic-cloud detection, probabilistic forecasting, development of surrogate models for physical dispersion models, sensitivity analysis, uncertainty quantification, hazard assessment and risk analysis, and data assimilation.
+Developments in Artificial Intelligence (AI) provide new approaches to modelling volcanic clouds and, specifically, alternative ways of representing complex, high-dimensional data. Previous studies employing AI-based approaches to volcanic ash dispersion have focused primarily on the detection and segmentation of volcanic clouds in satellite imagery \citep{torrisi2024,corradino2024}. However, the use of generative AI techniques for volcanic-cloud modelling and forecasting remains largely unexplored. In particular, Variational Autoencoders (VAEs) \citep{kingma2013} are a class of generative models that learn a probabilistic mapping between a high-dimensional data space and a lower-dimensional latent space, providing a compact representation of the dominant features of the original data. The learned latent representation can be used subsequently for the reconstruction and synthesis of new states by sampling from the latent space, enabling the generation of large numbers of new samples at relatively low computational cost. In addition, such a reduced-dimensional representation may be particularly relevant for ensemble-based data assimilation, as it provides an alternative space in which the probability distribution of the model state can be represented and updated.
 %
 % Latent space data assimilation
 %
@@ -48,14 +41,12 @@ Several recent studies have demonstrated the benefits of using a low-dimensional
 Alternatively, \citet{pasmans2025} proposed a variant of the ensemble transform Kalman filter~\citep{bishop2001} in which the analysis update is applied in the latent space of a VAE. In addition, they also showed that by introducing a second latent space for the observational innovations, the performance can be further improved when non-Gaussian observation errors are present.
 
 %
-% Motivation
-%
-Previous studies employing AI-based approaches to volcanic ash dispersion have focused primarily on the detection and segmentation of volcanic clouds in satellite imagery \citep{torrisi2024,corradino2024}. However, the use of generative AI techniques for volcanic-cloud modelling and forecasting remains largely unexplored.
-%
 % Objectives
 %
-This work introduces a generative AI framework for statistically augmenting a small ensemble of physics-based numerical simulations, thereby enriching the ensemble forecast representation. A conventional VAE is employed to generate thousands of predictions (samples) of volcanic ash concentration. Specifically, an ensemble forecast of two-dimensional mass loading, \ie vertical column mass per unit area of airborne ash, served as the training data for a convolutional neural network. The training, validation and test datasets were simulated using the VATD model FALL3D~\citep{folch2020,prata2021,folch2025}. By perturbing eruption source parameters and meteorological fields, FALL3D can produce an ensemble of simulations in a very efficient way by running a parallel job with multiple GPUs~\citep{folch2022}. As a first step, this paper focuses on characterising the statistical properties of VAE-generated ensembles and evaluating the VAE performance. Importantly, although the present study is centred on volcanic ash applications, the proposed method can be readily extended to other areas of atmospheric science, with direct applications in forecasting air pollution scenarios associated with dust storms and in modelling the transport of contaminants originating from large wildfires. The study on using the latent space for satellite DA via deep learning is postponed to a following paper.
+This work explores the potential of generative AI for probabilistic modelling and forecasting of volcanic clouds, proposing a hybrid approach that combines a VAE with physics-based numerical simulations. A conventional VAE is employed to learn a reduced-dimensional latent representation of the statistical structure of an ensemble of simulations. As an initial proof of concept, an ensemble of two-dimensional mass loading, \ie vertical column mass per unit area of airborne ash, was used as training data for a convolutional neural network. The training, validation, and test datasets were generated using the VATD model FALL3D~\citep{folch2020,prata2021,folch2025}.
+%
+Two numerical experiments are presented. In the synthetic experiment, the VAE is used to generate thousands of new samples from a small ensemble of numerical simulations, and its ability to reproduce the statistical characteristics of a larger reference ensemble is evaluated. In the second experiment, satellite retrievals from the 2018 Etna eruption are used to evaluate two latent-space data assimilation methodologies.
 %
 % Paper structure
 %
-The manuscript is organised as follows. Section~\ref{sec:experiments} describes the FALL3D numerical model, the model configuration and the datasets used for training and performance evaluation. The neural network architecture is described in Sect.~\ref{sec:vae} along with a brief overview of the theoretical background behind VAEs. The results are presented in Sect.~\ref{sec:results} and the performance is evaluated in terms of different metrics. Finally, conclusions are drawn in Sect.~\ref{sec:conclusions}, where some implications of this work and possible future applications are discussed.
+The manuscript is organised as follows. A brief theoretical background on VAEs and a description of the neural network architecture are presented in Sect.~\ref{sec:vae}. The ensemble-based data assimilation methods employed in this work are described in Sect.~\ref{sec:da}. Section~\ref{sec:experiments} describes the numerical experiments, including the FALL3D numerical model, model configurations used, and performance evaluation metrics. The results are presented and discussed in Sect.~\ref{sec:results} and, finally, conclusions are drawn in Sect.~\ref{sec:conclusions}, together with a discussion of the implications and potential applications of the proposed approach.

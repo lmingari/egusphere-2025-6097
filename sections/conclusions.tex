@@ -1,25 +1,19 @@
 \conclusions \label{sec:conclusions}
 %
 % Short summary
-This paper has untapped the use of generative AI modelling for atmospheric transport of volcanic clouds. As a pioneer step, we proposed a simple approach based on a convolutional Variational Autoencoder (VAE), a type of ML model capable of learning a probabilistic representation of data in a low dimensional latent space and generate new data (samples) similar to those simulated by a physical model.
+%
+This study explores the potential of a hybrid strategy for volcanic-cloud modelling based on the integration of generative AI with physics-based simulations. A Variational Autoencoder (VAE) is trained on a relatively small ensemble of numerical simulations to learn a compact, low-dimensional representation of the high-dimensional problem. This methodology offers several potential advantages, including the generation of large ensembles at very low computational cost, reduced sampling errors and improved estimation of ensemble statistics, the generation of new samples beyond those contained in the training dataset, and the ability to perform statistical operations in a substantially lower-dimensional space, including latent-space data assimilation.
 
 %
 % Main results
-Numerical simulations in geophysics can be highly demanding in terms of computational resources. For example, the ensemble simulation for the test dataset used in this work was run on the LUMI supercomputer using 2048 GPUs. 
 %
-% Computational burden
-With the proposed methodology, it is possible to generate thousands of new physics-grounded samples with statistical properties close to the true (model) in very short times using just a personal computer. 
+Two numerical experiments were presented. The synthetic experiment assessed the consistency of the VAE-generated ensemble using a controlled case characterized by multiple qualitatively different solutions, testing the ability of the VAE to capture broad variability. Even when no new physical knowledge is introduced by a VAE-augmented ensemble, it provides a good statistical approximation of the reference distribution and generates fields that are statistically consistent with the underlying physical model, particularly at large spatial scales. The results also highlight limitations in the representation of smaller-scale spatial structures.
 %
-% Prob. distribution
-Compared to the training dataset, VAE can provide a better approximation to the actual distribution with a 2.6x improvement in terms of the Jensen-Shannon (JS) divergence when large enough ensembles are generated. 
+However, the reconstruction error is smaller than the errors introduced by the numerical model itself. In the Etna experiment, the 24 December 2018 eruption was modelled and the VAE-augmented ensemble was compared with satellite retrievals. The agreement with observations was very similar for the numerical and VAE-augmented ensembles, with the latter yielding better RMSE, RMSLE, and Pearson correlation coefficients, suggesting that the generation of new samples can lead to a better statistical representation of forecast uncertainty.
 %
-% Sample statistics
-However, as expected, the training data exhibits superior performance to the VAE across nearly all statistical metrics considered in this work. However, the VAE-generated ensemble still provides a really good approximation of the ensemble mean, spread and probabilities of exceedance. 
-%
-% Discussion
-For example, the typical VAE error in relative terms was found to be around $3.4\%$ for the ensemble mean, while the training error was $1.78\%$ on average. This is negligible compared to typical errors found when model forecasts are compared with observations (\ie, satellite retrievals or ground-based measurements) in real applications. 
+The Etna experiment was also used to provide a proof-of-concept demonstration of latent-space data assimilation methodologies. A two-dimensional estimation problem was solved by assimilating satellite retrievals in the VAE latent space. The analysis ensemble showed improved agreement with the observations across all evaluated metrics, while significantly reducing the ensemble spread and retaining the ability to represent the spatial variability of the volcanic cloud and the physical consistency with the simulated prior. These results demonstrate the potential of the formulation, although further research is required to assess its robustness and applicability across different eruption scenarios. Future work should extend the methodology to three-dimensional fields and evaluate its performance against state-of-the-art data assimilation approaches and independent observations.
 
 %
-% Conclusions
-In summary, this methodology can be extremely useful for ensemble expansion, uncertainty quantification, and surrogate modelling, enabling to approximate the underlying distribution of the training dataset and generate synthetic predictions from it. Furthermore, by enabling latent space data assimilation via deep learning approaches, this methodology has the potential to dramatically reduce forecast errors in operational frameworks.
-
+% Final summary
+%
+In summary, this work represents a first proof of concept based on a relatively simple neural architecture and an elementary data assimilation methodology. Further research is required to explore more complex architectures and generative models, test the methodology across different eruption scenarios, and exploit the reduced-dimensional latent space to develop and evaluate more sophisticated assimilation approaches, and ultimately assess its potential implications for operational forecasting.

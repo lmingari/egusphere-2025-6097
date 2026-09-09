@@ -26,16 +26,15 @@ where $q_{\phi}(\vec{z}\vert\vec{x})$ is the encoder approximate posterior and $
 \end{equation*}
 The first term ($\mathcal{L}_R$, reconstruction loss) encourages reconstructions to be accurate and, in this work, it is assumed to be the Mean Squared Error (MSE) between the input ($\vec{x}$) and its reconstructed output (\vec{x}'):
 \begin{equation}
-  \mathcal{L}_R = \dfrac{1}{N} \sum_{i=1}^N (x_i - x'_i)^2
+  \mathcal{L}_R = \dfrac{1}{\spaceDim} \sum_{i=1}^{\spaceDim} (x_i - x'_i)^2
 \end{equation}
-being $N$ the dimension of the original space. The second term ($\mathcal{L}_{KL}$) is defined in terms of the Kullback-Leibler (KL) divergence, $D_{KL}$, and measures the distance between the approximate posterior $q_{\phi}(\vec{z} \vert \vec{x})$ and the prior distribution $p(\vec{z})$. In practice, the $D_{KL}$ term forces $q_{\phi}$ to be close to the prior distribution $p(\vec{z})$. Traditionally, the standard VAE assumes a diagonal multivariate normal distribution for the approximate posterior, $q_{\phi}(\vec{z} \vert \vec{x}) = \mathcal {N}(\vec{\mu}, \vec{\sigma^2} \mathbb{I} )$, and a standard normal distribution for the prior, $p(\vec{z}) = \mathcal {N}(\vec{0},\mathbb{I})$, leading to:
+being \spaceDim the dimension of the original space. The second term ($\mathcal{L}_{KL}$) is defined in terms of the Kullback-Leibler (KL) divergence, $D_{KL}$, and measures the distance between the approximate posterior $q_{\phi}(\vec{z} \vert \vec{x})$ and the prior distribution $p(\vec{z})$. In practice, the $D_{KL}$ term forces $q_{\phi}$ to be close to the prior distribution $p(\vec{z})$. Traditionally, the standard VAE assumes a diagonal multivariate normal distribution for the approximate posterior, $q_{\phi}(\vec{z} \vert \vec{x}) = \mathcal {N}(\vec{\mu}, \vec{\sigma^2} \mathbb{I} )$, and a standard normal distribution for the prior, $p(\vec{z}) = \mathcal {N}(\vec{0},\mathbb{I})$, leading to:
 \begin{equation}
-  \mathcal{L}_{KL} = -\dfrac{1}{2} \sum_{i=1}^K \left[1+\log \sigma_i^2 - \mu_i^2 - \sigma_i^2 \right]
+  \mathcal{L}_{KL} = -\dfrac{1}{2} \sum_{i=1}^\latentDim \left[1+\log \sigma_i^2 - \mu_i^2 - \sigma_i^2 \right]
 \end{equation}
-being $\vec{\mu} = (\mu_1,\dots,\mu_K)^{\intercal}$ the vector of means, $\vec{\sigma^2} = (\sigma_1^2,\dots,\sigma_K^2)$ the vector of variances and $K$ the dimension of the latent space where vectors $\vec{z}$ live. Finally, the so-called $\beta$-VAE is a modification of the standard VAE that uses a hyperparameter $\beta$ to weight the KL divergence term in the loss function:
+being $\vec{\mu} = (\mu_1,\dots,\mu_\latentDim)^{\intercal}$ the vector of means, $\vec{\sigma^2} = (\sigma_1^2,\dots,\sigma_\latentDim^2)$ the vector of variances and \latentDim the dimension of the latent space where vectors $\vec{z}$ live. Finally, the so-called $\beta$-VAE is a modification of the standard VAE that uses a hyperparameter $\beta$ to weight the KL divergence term in the loss function:
 \begin{equation}
   \mathcal{L}_{VAE} = \mathcal{L}_R + \beta \, \mathcal{L}_{KL}
   \label{eq:vae_loss}
 \end{equation}
 This is the expression of the loss function used in this work. In summary, VAE training optimises the encoder and decoder by minimising the VAE loss function \eqref{eq:vae_loss} on a training set of input vectors $\left\{ \vec{x_i} \right\}$, so that inputs are accurately reconstructed from latent samples, while the latent distribution remains close to the prior.
-
