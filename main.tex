@@ -31,7 +31,7 @@
 \runningauthor{L. Mingari}
 
 \received{}
-\pubdiscuss{} %% only important for two-stage journals
+\pubdiscuss{} 
 \revised{}
 \accepted{}
 \published{}
@@ -48,32 +48,29 @@ Ensemble-based modelling of the atmospheric dispersal of volcanic clouds enables
 %
 % 2. Problem
 %
-Many ensemble applications, including quantification of forecast uncertainties, data assimilation, and probabilistic hazard assessments, require a large number of members to reduce sampling errors and adequately capture probability distributions. 
+Many ensemble applications, including forecast uncertainty quantification, data assimilation, and probabilistic hazard assessment, require large ensembles to reduce sampling errors and adequately represent probability distributions. 
 %
-However, the simulation and processing of large ensembles with Volcanic Ash Transport and Dispersal (VATD) models can be computationally demanding, even on high-performance computing clusters. Generative AI offers a complementary approach by representing simulated fields in a lower-dimensional latent space, enabling new samples to be generated at low computational cost and facilitating the manipulation and analysis of large ensembles.
+However, simulating and processing large ensembles with atmospheric dispersal models can be computationally demanding, even on high-performance computing clusters. Generative AI offers a complementary approach by representing simulated fields in a lower-dimensional latent space, enabling new samples to be generated at low computational cost and facilitating the manipulation of large ensembles.
 %
 % 3. Method
 %
-In this work, a convolutional Variational AutoEncoder (VAE) is trained on ensembles of physics-based simulations and subsequently used to generate new samples, thereby expanding the original ensemble. The learned latent-space representation is then used to test two ensemble-based data assimilation methodologies: 
-(i) the Ensemble transform Kalman filter and
-(ii) the Regularized bootstrap particle filter,
-demonstrating the advantages of performing data assimilation in a lower-dimensional space.
+A Variational AutoEncoder (VAE) is trained on ensembles of physics-based simulations and used to generate new samples. The learned latent-space representation is then used to test two ensemble-based data assimilation methods, demonstrating the potential benefits of performing data assimilation in a lower-dimensional space.
 %
 % 4. Proof-of-concept scope
 %
-As a first proof of concept, the VAE is trained on two-dimensional column-mass fields, and the corresponding assimilation problem is formulated in two dimensions rather than by updating the full three-dimensional concentration state.
+As a proof of concept, the data assimilation problem is formulated in two dimensions.
 %
-% 5. Quantitative results
+% 5. Results
 %
-Two numerical experiments are presented. Evaluated against a larger reference ensemble, the VAE-generated ensemble in the first experiment is found to closely reproduce probability distributions and key statistics. The Jensen--Shannon divergence decreases as the generated ensemble size exceeds that of the training ensemble, while the ensemble mean achieves a MAPE of $3.4 \pm 0.6\%$ and an RMSE of $0.20 \pm 0.03$. Although these errors are higher than those of the training ensemble (MAPE $=1.78\%$), they remain relatively low in comparison with typical forecasting errors. This is corroborated by the second experiment, in which the VAE-generated ensemble shows better agreement with satellite retrievals than the training ensemble in terms of RMSE, RMSLE, and Pearson correlation coefficient, suggesting that the generation of new samples leads to a better representation of the ensemble.
+Two numerical experiments demonstrate that VAE-generated ensembles can reproduce key statistics of a larger reference ensemble and improve agreement with satellite retrievals. The VAE achieves up to a 1000-fold compression of the original fields into 16- and 32-dimensional latent spaces. The VAE-generated ensemble of 4096 members reduces RMSE by 4\% relative to the model prior, while latent-space data assimilation further reduces RMSE by 30\%.
 %
 % 6. Implications
 %
-These results highlight the potential of generative AI to efficiently expand physics-based ensemble forecasts and the potential to improve forecasting skill through latent-space data assimilation.
+These results highlight the potential of generative AI to efficiently augment physics-based ensembles and improve forecasting skill through latent-space data assimilation.
 \end{abstract}
 
 \clearpage
-\tableofcontents
+%\tableofcontents
 
 \include{sections/introduction}
 \include{sections/vae}

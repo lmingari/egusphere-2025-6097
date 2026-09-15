@@ -15,6 +15,9 @@ SECTION_FILES := $(addprefix $(SECTION_DIR)/,$(addsuffix .tex,$(SECTIONS)))
 # Name of the flattened, single-file output (for submission/archiving)
 MERGED_FILE := $(MAIN_FILE)_merged
 
+# Name of the submission archive
+ZIP_FILE := $(MAIN_FILE)_submission.zip
+
 # Compiler commands
 PDFLATEX := pdflatex -interaction=nonstopmode
 BIBTEX := bibtex
@@ -22,7 +25,7 @@ LATEXPAND := latexpand
 
 # --- Targets ---
 
-.PHONY: all clean view merge
+.PHONY: all clean view merge zip
 
 # Default target: builds the PDF
 all: $(MAIN_FILE).pdf
@@ -48,6 +51,13 @@ merge: $(MAIN_FILE).tex $(SECTION_FILES)
 	$(LATEXPAND) $(MAIN_FILE).tex > $(MERGED_FILE).tex
 	@echo "Flattened file written to $(MERGED_FILE).tex"
 
+# Target to generate a submission zip archive with TeX sources, figures,
+# bibliography/style files, and class files.
+zip: merge
+	rm -f $(ZIP_FILE)
+	zip -r $(ZIP_FILE) $(MERGED_FILE).tex figs *.bsl *.bst *.cls *.bib
+	@echo "Submission archive written to $(ZIP_FILE)"
+
 # Target to open the generated PDF
 view: $(MAIN_FILE).pdf
 	zathura $(MAIN_FILE).pdf &
@@ -58,6 +68,6 @@ clean:
 	      $(MAIN_FILE).toc $(MAIN_FILE).blg $(MAIN_FILE).bbl \
 	      $(MAIN_FILE).lof $(MAIN_FILE).lot $(MAIN_FILE).fls \
 	      $(MAIN_FILE).synctex.gz $(MAIN_FILE).pdf \
-		  $(MERGED_FILE).tex \
+		  $(MERGED_FILE).tex $(ZIP_FILE) \
 		  $(addprefix $(SECTION_DIR)/,$(addsuffix .aux,$(SECTIONS)))
 

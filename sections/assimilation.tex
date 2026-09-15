@@ -1,78 +1,99 @@
-\section{Latent-space data assimilation} \label{sec:da}
-Data assimilation (DA) techniques aim to obtain an optimal state of a dynamical system by combining model forecasts with observations and are widely used by operational centers to forecast geophysical systems \citep{carrasi2018}. However, the application of DA to geophysical systems is challenging because system states are typically represented by very high-dimensional vectors. As the dimensionality of the system increases, DA methods can become increasingly difficult to apply due to the complexity of representing the system state and its associated uncertainties.
+\section{Latent-space data assimilation} 
+\label{sec:da}
 %
-Ensemble-based DA methods partially address the high-dimensionality problem by representing the uncertainty of the system state through a finite ensemble of model realizations. This ensemble approximates the relevant error statistics, making ensemble-based methods practical for high-dimensional and nonlinear geophysical systems.
+Data Assimilation (DA) techniques aim to obtain an optimal state of a dynamical system by combining model forecasts with observations, and are widely used by operational centres to forecast geophysical systems \citep{carrasi2018}. However, the application of DA to geophysical systems is challenging because their system states are typically represented by very high-dimensional vectors. As the dimensionality of a system increases, DA methods become increasingly difficult to apply due to the complexity of representing the system state and its associated uncertainties.
 %
-Still, computationally expensive physical models constrain the ensemble size that can be generated in geoscientific applications, increasing sampling errors in the estimation of ensemble statistics and potentially leading to suboptimal analyses.
+Ensemble-based DA methods partially address the issue of high-dimensionality by representing the uncertainty of the system state through a finite ensemble of model realizations. The key underpinning concept is that the ensemble can approximate the relevant error statistics, making ensemble-based methods practical for high-dimensional and non-linear geophysical systems. Still, in many geoscientific applications, the computational cost of the physical models constrains the ensemble sizes, increasing sampling errors in the estimation of ensemble statistics and potentially leading to suboptimal analyses.
 
-These limitations are particularly relevant for atmospheric applications, where the system state may comprise millions of variables, while nonlinear dynamics and non-Gaussian error distributions can limit the applicability of traditional DA approaches. For example, many variational and Kalman filter methods rely on assumptions of approximately Gaussian error statistics, leading to inaccurate state estimates when the underlying distributions are strongly non-Gaussian.
+These limitations are particularly relevant for atmospheric applications, where the system state may comprise millions of degrees of freedom, while non-linear dynamics and non-Gaussian error distributions can limit the applicability of traditional DA approaches. For example, many variational and Kalman filter methods rely on assumptions of approximately Gaussian error statistics, leading to inaccurate state estimates when the underlying distributions are strongly non-Gaussian.
 %
-Particularly challenging for DA are variables that are lower-bounded and poorly described by Gaussian distributions, such as water-vapour mixing ratios \citep{kliewer2016}, rainfall \citep{husak2007}, aerosol concentrations \citep{oneill2000}, and volcanic ash concentrations \citep{mingari2023}, often exhibiting strongly skewed and near-zero distributions.
+Particularly challenging for DA are variables that are lower-bounded (\eg cannot take negative values) and poorly described by Gaussian distributions, such as water-vapour mixing ratios \citep{kliewer2016}, rainfall \citep{husak2007}, aerosol concentrations \citep{oneill2000}, and volcanic ash concentrations \citep{mingari2023}, often exhibiting strongly skewed and near-zero distributions.
 %
-Particle filters avoid the Gaussian assumption by representing the state distribution with a set of weighted samples (particles) and updating their weights according to the observation likelihood. However, as the number of state variables grows, the particle weights can collapse onto one or a few particles, leading to severe particle degeneracy.
+Particle filters circumvent the Gaussian assumption by representing the state distribution with a set of weighted samples (particles) and updating their weights according to the observation likelihood. However, as the number of state variables grows, particle weights can collapse onto one or a few particles, leading to severe particle degeneracy.
 
-The low-dimensional manifold learned by the VAE can be exploited to perform data assimilation in a compressed representation of the model state, expressed in terms of a relatively small number of latent variables while retaining the main spatial structures and variability of the original fields. Thus, rather than applying DA directly to the high-dimensional ash concentration fields, the analysis is performed in latent space and the resulting states are mapped back to the physical space through the VAE decoder, substantially reducing the dimensionality of the problem.
+The low-dimensional manifold learned by the VAE can be exploited to perform DA in a compressed representation of the model state, expressed in terms of a relatively small number of latent variables while retaining the main spatial structures and variability of the original fields. Thus, rather than applying DA directly to the high-dimensional ash concentration fields, the analysis is performed in the latent space, reducing the dimensionality of the problem and then using the VAE decoder to map the resulting states back to the physical space.
 %
-The application of ensemble-based DA methods in the VAE latent space offers several advantages. The low dimensionality of the latent representation substantially reduces the computational cost of the DA analysis, allowing  larger ensembles to be used than would be practical in the original physical space. In turn, larger ensembles can potentially reduce sampling errors in the estimation of ensemble statistics. Moreover, the compact latent representation facilitates the estimation of these statistics, while the approximately Gaussian distribution of the latent variables makes the latent space particularly suitable for ensemble-based DA methods based on Gaussian assumptions. In this work, we therefore investigate two ensemble-based DA approaches operating in the VAE latent space, briefly described below: the Ensemble Transform Kalman Filter (ETKF) and the Particle Filter (PF).
-
+The application of ensemble-based DA methods in the VAE latent space offers several advantages. First of all, the low dimensionality of the latent representation substantially reduces the computational cost of the DA analysis, making it possible to use larger ensembles than in the original physical space. In turn, larger ensembles can potentially reduce sampling errors in the estimation of ensemble statistics. On the other hand, the compact latent representation facilitates the estimation of these statistics, while the approximately Gaussian distribution of the latent variables makes the latent space particularly suitable for ensemble-based DA methods based on Gaussian assumptions. In this work, we investigate two ensemble-based DA approaches operating in the VAE latent space: the Ensemble Transform Kalman Filter (ETKF) and the regularized bootstrap Particle Filter (PF), briefly described below.
+%
+% Ensemble formulation
+%
 \subsection{Ensemble formulation}
-Let $\{ \mathbf{z}_i \}$ denote a prior ensemble of \ensSize latent-space vectors, with $\mathbf{z}_i \in \mathbb{R}^{\ensSize}$, and let $\mathbf{y}_{\mathrm{obs}} \in \mathbb{R}^{\obsDim}$ denote the vector of \obsDim observations. The latent-space ensemble is mapped to the physical space through the VAE decoder $D$,
+Let $\{ \vec{z}_i \}$ denote a prior ensemble of \ensSize latent-space vectors, with $\vec{z}_i \in \mathbb{R}^{\latentDim}$, and let $\vec{y}_{\mathrm{obs}} \in \mathbb{R}^{\obsDim}$ denote the vector of \obsDim observations. The latent-space ensemble is mapped to the physical space through the VAE decoder $D$,
+%
 \begin{equation}
-\mathbf{x}_i = D(\mathbf{z}_i)
+\vec{x}_i = D(\vec{z}_i)
 \end{equation}
-with $\mathbf{x}_i \in \mathbb{R}^{\spaceDim}$. The corresponding observation-space ensemble is then obtained by applying the observation operator, 
+%
+with $\vec{x}_i \in \mathbb{R}^{\spaceDim}$. The corresponding observation-space ensemble is then obtained by applying the observation operator, 
+%
 \begin{equation}
-\mathbf{y}_i = H(\mathbf{x}_i) = H(D(\mathbf{z}_i)),
+\vec{y}_i = H(\vec{x}_i) = H(D(\vec{z}_i)),
 \end{equation}
-where $H$ maps the physical state to the observation space. Thus, although the
-analysis is performed in the \latentDim-dimensional latent space, the observations are related to the latent variables through the composition of the VAE decoder and the observation operator. 
+%
+where $H$ is the operator mapping the physical state to the observation space. Thus, although the analysis is performed in the \latentDim-dimensional latent space, the observations are related to the latent variables through the composition of the VAE decoder and the observation operator. 
 
 The prior ensemble mean in latent space is defined as
+%
 \begin{equation}
-\overline{\mathbf{z}} = \frac{1}{\ensSize}\sum_{i=1}^{\ensSize}\mathbf{z}_i
+\vec{\bar{z}} = \frac{1}{\ensSize}\sum_{i=1}^{\ensSize}\vec{z}_i
 \end{equation}
-We define the background anomaly matrix $\mathbf{Z'} \in \mathbb{R}^{\latentDim \times \ensSize}$, whose $i$-th column represents the deviation of the corresponding ensemble member from the ensemble mean, $\mathbf{z}_i - \mathbf{\bar{z}}$. Similarly, we define the observation-space anomaly matrix $\mathbf{Y'} \in \mathbb{R}^{\obsDim \times \ensSize}$, whose columns represent the deviations of the observation-space ensemble members from the corresponding ensemble mean, $\mathbf{y}_i - \mathbf{\bar{y}}$.
-
+%
+We define the background anomaly matrix $\mathbf{Z'} \in \mathbb{R}^{\latentDim \times \ensSize}$, whose $i$-th column represents the deviation of the corresponding ensemble member from the ensemble mean, $\vec{z}_i - \vec{\bar{z}}$. Similarly, we define the observation-space anomaly matrix $\mathbf{Y'} \in \mathbb{R}^{\obsDim \times \ensSize}$, whose columns represent the deviations of the observation-space ensemble members from the corresponding ensemble mean, $\vec{y}_i - \vec{\bar{y}}$.
+%
+% Ensemble transform Kalman filter
+%
 \subsection{Ensemble transform Kalman filter} \label{sec:etkf}
-The Ensemble transform Kalman filter (ETKF), introduced by \cite{bishop2001}, is employed in this work following the formulation adopted by \cite{hunt2007}. The analysis ensemble is obtained by updating both the ensemble mean and the ensemble anomalies. The analysis mean is expressed as a linear combination of the background ensemble anomalies,
+The Ensemble transform Kalman filter (ETKF), introduced by \cite{bishop2001}, is employed in this work following the formulation adopted by \cite{hunt2007}. The analysis ensemble is obtained by updating both the prior ensemble mean ($\vec{\bar{z}} \to \vec{\bar{z}}_a$) and the prior ensemble anomalies ($\mathbf{Z'} \to \mathbf{Z'}_a$). The analysis ensemble mean $\vec{\bar{z}}_a$ is expressed as a linear combination of the background ensemble anomalies,
+%
 \begin{equation}
-\mathbf{\bar{z}_a} = \mathbf{\bar{z}} + \mathbf{Z'}\,\mathbf{w},
+\vec{\bar{z}}_a = \vec{\bar{z}} + \mathbf{Z'}\,\vec{w},
 \label{eq:analysis_mean}
 \end{equation}
-where $\mathbf{w} \in \mathbb{R}^{\ensSize}$ is a vector of weights to be determined. The analysis anomalies are obtained by applying a transformation matrix $\mathbf{W}$ to the background anomalies,
+%
+where $\vec{w} \in \mathbb{R}^{\ensSize}$ is a vector of weights to be determined. In turn, the analysis anomalies $\mathbf{Z'}_a$ are obtained by applying a transformation matrix $\mathbf{W}$ to the background anomalies,
+%
 \begin{equation}
 \mathbf{Z'}_a = \mathbf{Z'}\,\mathbf{W}.
 \label{eq:analysis_anomalies}
 \end{equation}
-The weight vector $\mathbf{w}$ in \eqref{eq:analysis_mean} is obtained by
+%
+The weight vector $\vec{w}$ in \eqref{eq:analysis_mean} is obtained by
 solving the linear system
 \begin{equation}
-\mathbf{A}\mathbf{w} = \mathbf{Y'}^\intercal\mathbf{R}^{-1}\mathbf{d},
+\mathbf{A}\vec{w} = \mathbf{Y'}^\intercal\mathbf{R}^{-1}\vec{d},
 \end{equation}
-where $\mathbf{R}$ is the observation-error covariance matrix, $\mathbf{d} = \mathbf{y}_{\mathrm{obs}}-
-\mathbf{\bar{y}}$ is the innovation vector, and the matrix $\mathbf{A}$ is defined as
+where $\mathbf{R}$ is the observation-error covariance matrix, $\vec{d} = \vec{y}_{\mathrm{obs}}-\vec{\bar{y}}$ is the innovation vector, and the matrix $\mathbf{A}$ is defined as
+%
 \begin{equation}
 \mathbf{A} = (k-1)\mathbf{I} + \mathbf{Y'}^\intercal\mathbf{R}^{-1}\mathbf{Y'}.
 \end{equation}
+%
 The analysis covariance in the latent space is given by
+%
 \begin{equation}
 \mathbf{P}^a = \mathbf{Z'} \mathbf{A}^{-1} \mathbf{Z'}^\intercal
 \label{eq:analysis_covariance}
 \end{equation}
-To obtain an ensemble with this covariance, the transformation matrix $\mathbf{W}$ in \eqref{eq:analysis_anomalies} is constructed as a symmetric square root of $(k-1)\mathbf{A}^{-1}$. Specifically, using the eigendecomposition $\mathbf{A} = \mathbf{V} \mathbf{\Lambda} \mathbf{V}^\intercal$ the transformation matrix is given by
+%
+In order to obtain an ensemble with this covariance, the transformation matrix $\mathbf{W}$ in \eqref{eq:analysis_anomalies} is constructed as a symmetric square root of $(\ensSize-1)\mathbf{A}^{-1}$. Specifically, using the eigendecomposition $\mathbf{A} = \mathbf{V} \mathbf{\Lambda} \mathbf{V}^\intercal$ the transformation matrix $\mathbf{W}$ is given by
+%
 \begin{equation}
-\mathbf{W} = \sqrt{k-1}\, \mathbf{V} \mathbf{\Lambda}^{-1/2} \mathbf{V}^\intercal
+\mathbf{W} = \sqrt{\ensSize-1}\, \mathbf{V} \mathbf{\Lambda}^{-1/2} \mathbf{V}^\intercal
 \end{equation}
-This transformation ensures that the sample covariance of the analysis ensemble is consistent with $\mathbf{P}^a$. The posterior latent ensemble members are obtained from \eqref{eq:analysis_mean} and \eqref{eq:analysis_anomalies} by adding the transformed anomalies to the analysis mean. Finally, the resulting set of vectors $\mathbf{z}_a$ are then be passed through the VAE decoder to obtain the corresponding physical-space ensemble.
-
-\subsection{Regularized bootstrap particle filter} \label{sec:pf}
-Particle filtering \citep{doucet2001} has been successfully applied to low-dimensional models, \eg in nonlinear tracking problems \citep{arulampalam2002}, but direct application of the basic PF to high-dimensional systems is prone to weight collapse, as discussed above. As a result, several variants have been proposed to enable the application of particle filters in geophysical systems \citep{vanleeuwen2009}. Since the dimensionality of the latent space is substantially lower than that of the original physical space, we explore whether particle filtering becomes a viable option for data assimilation in this reduced representation. In this work, a basic bootstrap particle filter \citep{gordon1993} with Gaussian kernel regularization \citep{pham2001} is tested for latent-space data assimilation. The particle weights are computed from the observation likelihood,
+%
+This transformation ensures that the sample covariance of the analysis ensemble is consistent with $\mathbf{P}^a$. The posterior latent ensemble members are obtained from \eqref{eq:analysis_mean} and \eqref{eq:analysis_anomalies} by adding the transformed anomalies to the analysis mean. Finally, the resulting set of vectors $\vec{z}_a$ are then be passed through the VAE decoder to obtain the corresponding physical-space ensemble resulting from the analysis step.
+%
+% Regularized bootstrap particle filter
+%
+\subsection{Regularized bootstrap particle filter} 
+\label{sec:pf}
+Particle filtering \citep{doucet2001} has been successfully applied to low-dimensional models, \eg in non-linear tracking problems \citep{arulampalam2002}, but direct application of the basic PF to high-dimensional systems is prone to weight collapse, as discussed previously. As a result, several variants have been proposed to enable the application of particle filters in geophysical systems \citep{vanleeuwen2009}. Since the dimensionality of the latent space is substantially lower than that of the original physical space, we explore whether particle filtering becomes a viable option for data assimilation in this reduced representation. In this work, a basic bootstrap particle filter \citep{gordon1993} with Gaussian kernel regularization \citep{pham2001} is tested for latent-space data assimilation. The particle weights are computed from the observation likelihood,
 \begin{equation}
-w_i \propto p\left(\mathbf{y}_{\mathrm{obs}}\mid\ \mathbf{y}_i\right),
+w_i \propto p\left(\vec{y}_{\mathrm{obs}}\mid\ \vec{y}_i\right),
 \end{equation}
-and normalized to sum to one. The particles are then resampled according to their weights using systematic resampling \citep{kitagawa1996}, producing an equally weighted ensemble of size \ensSize. When the particle weights are highly concentrated on a small number of particles, resampling can substantially reduce the diversity of the ensemble. To restore particle diversity, the resampled particles, $\mathbf{z}_i^{r}$, are subsequently perturbed using a Gaussian kernel,
+and normalized to sum to one. The particles are then resampled according to their weights using systematic resampling \citep{kitagawa1996}, producing an equally weighted ensemble of size \ensSize. When the particle weights are highly concentrated on a small number of particles, resampling can substantially reduce the diversity of the ensemble. To restore particle diversity, the resampled particles, $\vec{z}_i^r$, are subsequently perturbed using a Gaussian kernel,
 \begin{equation}
-\mathbf{z}_i^{a}=\mathbf{z}_i^{r}+\mathbf{\epsilon}_i, \qquad
-\mathbf{\epsilon}_i\sim\mathcal{N}(\mathbf{0},\mathbf{\Sigma}_{\mathrm{reg}}),
+\vec{z}_i^{a}=\vec{z}_i^r+\vec{\epsilon}_i, \qquad
+\vec{\epsilon}_i\sim\mathcal{N}(\vec{0},\mathbf{\Sigma}_{\mathrm{reg}}),
 \end{equation}
 where $\mathbf{\Sigma}_{\mathrm{reg}}=h^2\mathbf{P}$, with $\mathbf{P}$ the sample covariance of the prior latent ensemble and $h$ a prescribed regularization factor. This kernel perturbation provides a simple regularization aimed at increasing the diversity among the resampled particles.

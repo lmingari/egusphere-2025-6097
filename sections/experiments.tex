@@ -1,21 +1,23 @@
 \section{Numerical experiments and evaluation} \label{sec:experiments}
+Two types of numerical experiments were performed: (i) a synthetic experiment \citep{mingari-experiment1} to characterize the VAE-generated ensemble and assess its ability to reproduce the statistics of a physics-based reference ensemble; and (ii) a second experiment \citep{mingari-experiment2} considering a real-case application aimed at improving the modelling of volcanic clouds through data assimilation in the latent space. The code and the material required to reproduce both experiments are available in the Supplementary Material.
 
-\subsection{Physics-based dispersal model}
-The latest release (version 9.1) of the open-source code FALL3D \citep{folch2025} was used to produce an ensemble of numerical simulations for each experiment. The resulting datasets are then used for VAE training, testing and evaluation. FALL3D is an Eulerian model for atmospheric passive transport and deposition of different atmospheric species (\eg, volcanic ash and gases, mineral dust and radionuclides) based on the so-called Advection-Diffusion-Sedimentation (ADS) equation \citep{folch2020,prata2021}. The numerical model is GPU-accelerated using the OpenACC parallel programming model and has been designed to support increasingly larger scientific workloads in preparation for the transition to extreme-scale computing systems \citep{folch2023b}. The model has been deployed and optimised on the main pre-exascale supercomputer systems in Europe: LUMI (Finland), Leonardo (Italy), and MareNostrum-5 (Spain), covering both NVIDIA and AMD GPU architectures.
+\subsection{Physics-based atmospheric dispersal model}
+The latest release (version 9.1) of the open-source code FALL3D \citep{folch2025} was used to produce an ensemble of numerical simulations for the two experiments. The resulting datasets were then used for VAE training, testing and evaluation. FALL3D is an Eulerian model for atmospheric passive transport and deposition of different atmospheric species (\eg, volcanic ash and gases, mineral dust and radionuclides) based on the so-called Advection-Diffusion-Sedimentation (ADS) equation \citep{folch2020,prata2021}. The numerical model is GPU-accelerated using the OpenACC parallel programming model and has been designed to support increasingly larger scientific workloads in preparation for the transition to extreme-scale computing systems \citep{folch2023b}. The FALL3D model has been deployed and optimised on several EuroHPC supercomputing systems: LUMI (Finland), Leonardo (Italy), and MareNostrum-5 (Spain), covering both NVIDIA and AMD GPU architectures.
 %
-FALL3D is designed to run ensemble simulations as a single, massively parallel job, allowing to maximize computational efficiency and scalability \citep{folch2022}. Broadly speaking, ensemble modelling allows to characterise and quantify model uncertainties due to poorly constrained input parameters and errors in the numerical model, physical parameterisations or underlying model-driving meteorological data. In addition, the ability to generate ensemble runs makes it possible to improve forecasts by incorporating observations using different ensemble-based data assimilation techniques.
-
-Two numerical experiments were performed: (i) a synthetic experiment to characterize the VAE-generated ensemble and assess its ability to reproduce the reference FALL3D ensemble, and (ii) an Etna experiment to explore a real application aimed at improving the modelling of volcanic clouds.
-
+FALL3D is designed to run ensemble simulations as a single, massively parallel job, allowing to maximize computational efficiency and scalability \citep{folch2022}. Broadly speaking, ensemble modelling allows to characterise and quantify model uncertainties due to poorly constrained input parameters and errors in the numerical model, physical parameterisations or underlying model-driving meteorological data. In addition, the ability to generate ensemble runs makes it possible to improve forecasts by incorporating observations using different ensemble-based data assimilation techniques. The configuration of the FALL3D model for the two experiments is summarised in Table~\ref{tab:model}. 
+%
+% Synthetic experiment
+%
 \subsection{Synthetic experiment} \label{sec:synthetic-experiment}
-To define the first experiment, we used model data from the recent EU-MODEX Tenerife 2025 \citep{european_commission2025}, organised under the European Civil Protection Mechanism. This exercise represented the first large-scale eruption drill in Spain to practice the response to a potential volcanic eruption in Garachico volcano (Tenerife, Canary Islands) and test evacuation, social assistance and communication during a volcanic crisis. On 26 September 2025, we provided real-time ash-dispersion forecasts for a hypothetical eruption scenario to support emergency decision-making. The results were subsequently used to characterize the statistical properties of an augmented ensemble generated by the VAE in a controlled experiment. In this context, a hypothetical scenario refers to an eruption defined by assumed source parameters (e.g., eruption column height, mass eruption rate, and timing), rather than being constrained by real-time observations as in an actual event. Since this study focuses on generating ensembles from numerical simulations and approximating their statistical distribution, the distinction between real and hypothetical eruption scenarios does not affect the methodology or conclusions. This case was specifically selected because the ensemble simulations produce qualitatively different plume transport patterns, providing a suitable test bed for examining the ability of the VAE to reproduce the variability and statistical characteristics of the simulated ensemble.
+To define the first experiment, we used model data from the recent EU-MODEX Tenerife 2025 exercise \citep{european_commission2025}, organised under the European Civil Protection Mechanism. This exercise represented the first large-scale volcanic eruption drill in Spain to practice the response to a potential volcanic eruption from Garachico volcano (Tenerife, Canary Islands) and test the evacuation, the social assistance and communication protocols during a volcanic crisis. On 26 September 2025, we provided real-time ash-dispersion forecasts for a hypothetical eruption scenario to support emergency decision-making. Here we use the resulting simulations to characterize the statistical properties of an augmented ensemble generated by the VAE in a controlled experiment. In this context, the drill scenario refers to a fictitious eruption defined by given emission source parameters (eruption column height, mass eruption rate, and timing), rather than being constrained by real-time observations as would happen during a real event. Since our study focuses on generating ensembles from numerical simulations and approximating their statistical distribution, the distinction between real and hypothetical eruption scenarios does not affect the methodology or conclusions. This case was deliberately selected because the ensemble simulations produce qualitatively different plume transport patterns, providing a suitable test bed to inspect the ability of the VAE to reproduce the variability and statistical characteristics of the simulated ensemble.
 
+Three ensembles were simulated with FALL3D to produce the training, validation, and test datasets. The training ensemble, consisting of 256 members, was used to train the VAE and the validation ensemble, consisting of 64 members, was used during the training step to monitor the performance and tuning of the neural network hyper-parameters. Finally, the larger test ensemble, consisting of 2048 members, was used only at the end as a purely physics-based reference to evaluate the VAE model, providing a fair (unbiased) report of model accuracy. All numerical simulations were performed on the LUMI  supercomputing system, hosted at the Finish CSC. In particular, the execution of the test ensemble required substantial HPC resources and was executed on the LUMI-G partition allocating 256 computing nodes and a total of 2048 GPUs (one per ensemble member).
 %
-% Numerical simulations
+In all cases, a 24-h time window forecast was performed assuming a continuous ash emission starting at 09:00~UTC (see Table~\ref{tab:model}), a local-scale computational domain with a horizontal resolution of $0.1\degree$ and $120 \times 100 \times 25$ grid cells, and the FALL3D dispersal model was driven by the Global Forecast System (GFS) weather forecast from the National Centers for Environmental Prediction (NCEP).
 %
-Three ensemble were simulated by FALL3D to generate the training (simulation A), validation (simulation B), and test (simulation C) datasets. The ensemble corresponding to simulation A, consisting of 256 members, was used to train the VAE and the 64-member ensemble (simulation B) was used during the training step to monitor the performance and tuning of the neural network hyperparameters. Finally, the larger 2048-member ensemble (simulation C) was used only at the end as a purely physics-based reference to evaluate the VAE model, providing a fair (unbiased) report of model accuracy. All numerical simulations were performed on the LUMI EuroHPC supercomputing system, hosted at CSC's (Finland). In particular, simulation C required substantial HPC resources and was executed on the LUMI-G partition allocating 256 computing nodes and a total of 2048 GPUs.
+% Ensemble configuration
 %
-The configuration of the FALL3D model is summarised in Table~\ref{tab:model}. A 24-h forecast was performed assuming a continuous emission starting at 09:00~UTC. A local-scale computational domain with a horizontal resolution of $0.1\degree$ and $120 \times 100 \times 25$ grid cells was defined, and the FALL3D dispersal model was driven by the Global Forecast System (GFS) weather forecast from the National Centers for Environmental Prediction (NCEP).
+Each ensemble was simulated by perturbing Eruption Source Parameters (ESPs) and wind components, which are widely recognized as among the most sensitive parameters/inputs for volcanic ash transport models \citep{devenish2012,poulidis2018}. The column height was sampled around a central value of 9~\unit{km} above the vent level. Further details on the perturbed parameters and sampling ranges are provided in the Supplementary Material.
 
 \begin{table}[htbp]
     \caption{FALL3D model configurations used in the numerical experiments.}
@@ -23,10 +25,11 @@ The configuration of the FALL3D model is summarised in Table~\ref{tab:model}. A 
     \begin{tabular}{lcc}
     \tophline
     Parameter & Synthetic experiment & Etna experiment \\ \middlehline
-    Start time & 26 September 09:00~UTC & 24 December 2018 10:00~UTC \\
+    Start time & 26 September 2025 09:00~UTC & 24 December 2018 10:00~UTC \\
     Run time & 24~h & 8~h \\
     Horizontal grid resolution & 0.1\degree $\times$ 0.1\degree & 0.02\degree $\times$ 0.03\degree \\
-    Number of grid points & 120$\times$100$\times$25 & 256$\times$128$\times$40 \\
+    Grid size & 120$\times$100 & 256$\times$128 \\
+    Vertical levels & 25 & 40 \\
     Grain size distribution & bi-Gaussian & bi-Gaussian \\
     Emission source & Suzuki source$^\dagger$ & Suzuki source$^\dagger$ \\
     Mass emission rate & Estimated$^\ddagger$ & Custom \\
@@ -44,34 +47,37 @@ The configuration of the FALL3D model is summarised in Table~\ref{tab:model}. A 
 %
 % Numerical simulations
 %
-The second experiment aims to demonstrate the feasibility of latent-space data assimilation using a VAE-generated prior ensemble for the 24 December 2018 Etna eruption \citep{corradini2020,pardini2020}. The FALL3D model was driven by CERRA reanalysis \citep{schimanke2021,ridal2024}, with 106 vertical model levels, and initialized at 10:00~UTC. An 8-h simulation was performed using a 128-member ensemble (model prior), generated by perturbing the initial volcanic column-top height and the wind components by 20\%, which are among the parameters most sensitive to ash transport. An additional 48-member ensemble was simulated to be used as a validation dataset during the training process. Check Table~\ref{tab:model} for further details.
+The second experiment explores the feasibility of the latent-space DA using a VAE-generated prior ensemble for the 24 December 2018 Etna eruption \citep{corradini2020,pardini2020}. In this case, the FALL3D model was driven by the Copernicus regional reanalysis for Europe \citep[CERRA;][]{schimanke2021,ridal2024}, with 106 vertical model levels, and initialized at 10:00~UTC. An 8-h time window forecast was performed using a 128-member ensemble (model prior). An additional 48-member ensemble was simulated to be used as a validation dataset during the training process (see Table~\ref{tab:model}). Each ensemble was simulated by perturbing the eruptive column-top height and wind components by 20\% (see Supplementary Material for further details).
 
 %
 % VAE
 %
-The 128-member model prior is used to train a new VAE, which is subsequently used to generate a 4096-members ensemble (VAE prior) for the analysis step. As a proof-of-concept, we use two-dimensional ash column-mass fields rather than the full three-dimensional concentration field, both to reduce the dimensionality of the problem and to maintain a consistent neural-network architecture throughout the study. The input training data, defined on a $512 \times 256$ grid ($\spaceDim=131,072$), are encoded into 32-dimensional latent vectors. Before normalization, a $\log(1+x)$ transformation is applied to the ash column mass ($\mathbf{x}$) to reduce the strong positive skewness of its distribution, with $\mathbf{x}$ expressed in \unit{mg~m^{-2}}.
+The 128-member model prior was used to train a new VAE, which was subsequently used to sample a 4096-members ensemble (VAE prior) for the analysis step. As a proof-of-concept, we used two-dimensional ash column-mass fields rather than the full three-dimensional concentration field, both to reduce the dimensionality of the problem and to maintain a consistent neural-network architecture throughout the study. The input training data, defined on a $256 \times 128$ grid ($\spaceDim=131072$), was encoded into 32-dimensional latent space vectors. Before normalization, a $\log(1+x)$ transformation was applied to the ash column mass ($\mathbf{x}$) to reduce the strong positive skewness of its distribution, with $\mathbf{x}$ expressed in \unit{mg~m^{-2}}.
 
 %
 % Satellite
 %
-A single analysis step at 18:00~UTC is performed by assimilating the SEVIRI retrievals \citep{corradini2020,corradini2021} using two ensemble-based approaches, \ie, the ETKF (Sect.~\ref{sec:etkf}) and the PF (Sect.~\ref{sec:pf}). Only positive retrievals are considered, resulting in 2678 observations of ash column mass. A diagonal observation-error covariance matrix is assumed, with the observation-error standard deviation set to 50\% of the retrieved ash column mass, subject to a minimum value of 100~\unit{mg\,m^{-2}}, representative of a typical satellite detection limit.
-
+A single analysis step at 18:00~UTC was performed by assimilating Spinning Enhanced Visible and Infra-Red Imager (SEVIRI) volcanic ash retrievals \citep{corradini2020,corradini2021} considering two ensemble-based approaches, \ie, the ETKF (Sect.~\ref{sec:etkf}) and the PF (Sect.~\ref{sec:pf}). Only positive retrievals were considered, resulting in 2678 valid observations of ash column mass. A diagonal observation-error covariance matrix was assumed, with the observation-error standard deviation set to 50\% of the retrieved ash column mass, subject to a minimum value of 100~\unit{mg\,m^{-2}}, representative of a typical instrument detection limit.
+%
+% VAE configuration
+%
 \subsection{VAE configuration}
-A VAE was implemented in the PyTorch framework~\citep{paszke2019} using an architecture based on two-dimensional convolutional layers with kernel size of $3\times 3$. The VAE configuration is defined by the hyperparameters reported in Table~\ref{tab:hyperparameters}. The resulting number of trainable parameters was 698,849 for the synthetic experiment and 1,783,489 for the Etna experiment. The neural network was trained using the Adam optimizer for 400 epochs using mini-batches of 16 samples. The reconstruction loss and KL divergence (averaged over batches) were monitored at each epoch for both the training and validation datasets to prevent overfitting. Training was performed using the simulated ensembles of two-dimensional volcanic ash column-mass fields at a single forecast time. As outlined in the scheme of Fig.~\ref{fig:vae}, the encoder network maps the input data $\vec{x}$ through successive convolutional layers, followed by a flattening operation to two distinct latent space parameter vectors $\vec{\mu}$ (mean) and $\log\vec{\sigma}^2$ (log-variance), with dimensions $\latentDim=16$ and $\latentDim=32$ for the synthetic and Etna experiments, respectively. The decoder then reconstructs the input from the sampled latent vector $\vec{z}$ using a fully connected layer followed by successive upsampling and convolutional operations, restoring the original spatial dimensions. For the synthetic experiment, transposed convolutional layers are used for upsampling, whereas bilinear interpolation followed by convolutional layers is used in the Etna experiment to reduce checkerboard artifacts.
+\label{sec:VAE_configuration}
+A VAE was implemented in the PyTorch framework~\citep{paszke2019} using an architecture based on two-dimensional convolutional layers with kernel size of $3\times 3$. The VAE configuration is defined by the hyperparameters reported in Table~\ref{tab:hyperparameters}. The resulting number of trainable parameters was 698,849 and 1,783,489 for the synthetic and the Etna experiments respectively. The neural network was trained using the Adam optimizer during 400 epochs using mini-batches of 16 samples. The reconstruction loss and KL divergence (averaged over batches) were monitored at each epoch for both the training and validation datasets to prevent overfitting. Training was performed using the simulated ensembles of two-dimensional volcanic ash column-mass fields at a single forecast time. As outlined in Fig.~\ref{fig:vae}, the encoder network maps the input data $\vec{x}$ through successive convolutional layers, followed by a flattening operation to two distinct latent space parameter vectors $\vec{\mu}$ (mean) and $\log\vec{\sigma}^2$ (log-variance), with dimensions $\latentDim=16$ and $\latentDim=32$ for the synthetic and Etna experiments, respectively. The decoder then reconstructs the input from the sampled latent vector $\vec{z}$ using a fully connected layer followed by successive upsampling and convolutional operations, restoring the original spatial dimensions. For the synthetic experiment, transposed convolutional layers are used for upsampling, whereas bilinear interpolation followed by convolutional layers is used in the Etna experiment to reduce checkerboard artifacts.
 
 \begin{table}[t]
-  \caption{Hyperparameters used for the VAE training in the synthetic and Etna experiments.}
+  \caption{Hyper-parameters used for the VAE training in the synthetic and Etna experiments.}
   \label{tab:hyperparameters}
   \begin{tabular}{lcc}
     \tophline
     Hyperparameter & Synthetic & Etna \\ \middlehline
-    Latent dimension & 16 & 32 \\
+    Latent dimension \latentDim & 16 & 32 \\
     Input data size & 120$\times$100 & 256$\times$128 \\
     Number of epochs & 400 & 400 \\
     Batch size & 16 & 16 \\ 
     Convolutional layers & 6 & 8 \\
     Output channels & 16, 32, 64 & 16, 32, 64, 128 \\
-    Kernel size & 3$\times$3 & 3 \\
+    Kernel size & 3$\times$3 & 3$\times$3 \\
     Stride & 1$\times$1 & 2$\times$2 \\
     Activation function & ReLU & ReLU/Softplus \\
     Learning rate & 1E-3 & 1E-3 \\
@@ -80,15 +86,19 @@ A VAE was implemented in the PyTorch framework~\citep{paszke2019} using an archi
     \bottomhline
   \end{tabular}
 \end{table}
-
+%
+% Evaluation metrics
+% 
 \subsection{Evaluation metrics} \label{sec:metrics}
 \subsubsection{Standard performance metrics}
 The performance of the generated ensembles is evaluated in terms of a set of statistical metrics. Let $\vec{x}$ and $\hat{\vec{x}}$ denote the reference and estimated quantities, respectively, with $N$ denoting the total number of values being compared. The root mean square error (RMSE) is defined as
+%
 \begin{equation}
   \text{RMSE} = \sqrt {\frac{1}{N}\sum^N_{j=1} (x_j-\hat{x}_j)^2}.
   \label{eq:rmse}
 \end{equation}
-The root mean square logarithmic error (RMSLE) is computed analogously after applying the logarithmic transformation $\mathrm{log1p}(x) \equiv \log(1+x)$, providing a metric more sensitive to errors across multiple orders of magnitude. Similarly, the Mean Bias Error (MBE) is computed as
+%
+The root mean square logarithmic error (RMSLE) is computed analogously after applying the logarithmic transformation $\log(1+x)$, providing a metric more sensitive to errors across multiple orders of magnitude. Similarly, the Mean Bias Error (MBE) is computed as
 \begin{equation}
   \text{MBE} =\frac{1}{N}\sum^N_{j=1} x_j-\hat{x}_j
   \label{eq:mbe}
@@ -98,8 +108,10 @@ The Mean Absolute Percentage Error (MAPE) provides another relative measure of a
   \text{MAPE} = 100 \times \sum^N_{j=1} \left\vert \dfrac{x_j - \hat{x}_j}{\hat{x}_j} \right\vert
   \label{eq:mape}
 \end{equation}
-The Pearson correlation coefficient measures the linear correlation between the estimated and reference fields.
-
+Finally, the Pearson correlation coefficient measures the linear correlation between the estimated and reference fields.
+%
+% Distributional assessment
+% 
 \subsubsection{Distributional assessment}
 In addition to the standard performance metrics introduced above, the ability of the VAE to reproduce the statistical properties of the target distribution is further assessed using distributional and spectral metrics. The Jensen-Shannon (JS) divergence is a measure of the similarity between two probability distributions. Specifically, for two distributions $P = \{p_i\}$ and $Q=\{q_i\}$, the JS divergence is a symmetrized version of the KL divergence:
 \begin{equation}
@@ -113,7 +125,7 @@ where $M=\frac{1}{2}(P+Q)$ is a mixture distribution of $P$ and $Q$, while $D_{K
 \end{equation}
 The discrete distributions in \eqref{eq:kl} are estimated from histograms in this work.
 
-The two-dimensional isotropic power spectrum, $P(k)$, is computed to assess the ability of the VAE to generate realistic samples over different spatial scales, in consistency with physically-based models. It is defined as the radially-averaged 2D Power Spectrum Density (PSD) and is a function of the wavenumber magnitude, $k$:
+The two-dimensional isotropic power spectrum, $P(k)$, was also computed to assess the ability of the VAE to generate realistic samples over different spatial scales, in consistency with physically-based models. This power spectrum is defined as the radially-averaged 2D Power Spectrum Density (PSD) and is a function of the wavenumber magnitude, $k$:
 \begin{equation}
   P(k) = \dfrac{1}{N_k} \sum PSD(k_x,k_y)
   \label{eq:psd}
@@ -121,7 +133,7 @@ The two-dimensional isotropic power spectrum, $P(k)$, is computed to assess the 
 where $k=\sqrt{k_x^2 + k_y^2}$ is the magnitude of the wavevector, $PSD(k_x,k_y)$ is the two-dimensional Power Spectral Density obtained from a Fast Fourier Transform (FFT), and $N_k$ is the number of data points within an annular ring around $k$ in the Fourier space.
 
 \subsubsection{Categorical metrics}
-Categorical metrics are also used to assess binary plume detection. A positive detection is defined when the ash column mass exceeds a given threshold, set to 100~\unit{mg\,m^{-2}} in this work for demonstration purposes, which is a typical value corresponding to the satellite detection limit for ash clouds. The probability of detection (POD) measures the fraction of observed plume grid points that are correctly identified,
+Categorical metrics were also used to assess binary plume detection. A positive detection is defined when the ash column mass exceeds a given threshold, set to 100~\unit{mg\,m^{-2}} in this work for demonstration purposes, which is a typical value corresponding to the satellite detection limit for ash clouds. The probability of detection (POD) measures the fraction of observed plume grid points that are correctly identified,
 \begin{equation}
 \mathrm{POD} = \frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FN}},
 \end{equation}
@@ -129,4 +141,4 @@ where $\mathrm{TP}$ and $\mathrm{FN}$ denote true positives and false negatives,
 \begin{equation}
 J = \frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FP}+\mathrm{FN}},
 \end{equation}
-where $\mathrm{FP}$ denotes false positives. In summary, the probability of detection (POD) and Jaccard index are used to quantify the detection skill and spatial overlap, respectively.
+where $\mathrm{FP}$ denotes false positives. In summary, the probability of detection (POD) and Jaccard index were used to quantify the detection skill and spatial overlap, respectively.

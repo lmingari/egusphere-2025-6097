@@ -1,0 +1,147 @@
+\documentclass[acp,manuscript,noline]{copernicus}
+
+\usepackage{xspace}
+
+\begin{document}
+
+\title{Supplementary material for ``Integrating generative AI with physics-based simulations for probabilistic modelling of volcanic clouds''}
+
+\Author[1][lmingari@csic.es]{Leonardo}{Mingari}
+\Author[1]{Arnau}{Folch}
+\Author[1]{Heribert}{Pascual}
+\Author[2]{Manuel}{Titos}
+
+\affil[1]{Geosciences Barcelona (GEO3BCN-CSIC), Barcelona, Spain}
+\affil[2]{University of Granada, Granada, Spain}
+
+\runningtitle{Supplement: Generative AI for volcanic cloud modelling}
+\runningauthor{L. Mingari}
+
+\received{}
+\pubdiscuss{egusphere-2025-6097}
+\revised{}
+\accepted{}
+\published{}
+
+\firstpage{1}
+
+\maketitle
+\tableofcontents
+
+\section{Contents of the supplementary material}
+
+This supplementary material accompanies the manuscript entitled ``Integrating
+generative AI with physics-based simulations for probabilistic modelling of
+volcanic clouds'' submitted to \textit{Atmospheric Chemistry and Physics}
+(ACP), Copernicus manuscript reference egusphere-2025-6097. It provides
+additional information on the ensemble configuration used in the numerical
+experiments and lists the ancillary files and repositories required to
+reproduce the simulations and figures.
+
+\section{Ensemble configuration}
+
+\subsection{Sampling technique}
+Each ensemble was simulated by perturbing the Eruption Source Parameters (ESPs)
+and wind components, widely recognised as some of the most sensitive
+parameters/inputs for volcanic ash transport models \citep{devenish2012,poulidis2018}.
+%
+To efficiently sample the parameter space, we used Latin Hypercube Sampling
+\citep[LHS,][]{mckay1979}, a space-filling ensemble technique that requires
+fewer samples than purely random Monte Carlo sampling to achieve comparable
+coverage. LHS was used to generate combinations of source-term and
+meteorological perturbations for the FALL3D simulations.
+
+\subsection{Synthetic experiment}
+
+Table~\ref{tab:ensemble-synthetic} lists the reference value and sampling range
+for each perturbed parameter. The top height of the eruption column was sampled
+around the central value 9~\unit{km} above the vent level with a perturbation
+range of $30\%$ and was assumed to be constant during the simulations for each
+ensemble member. The vertical distribution of the source term was also modified
+by perturbing the Suzuki parameter $A_s$ controlling the maximum emission
+height \citep[see][for more information]{folch2020}. In addition, the
+horizontal wind components were perturbed considering a sampling range of
+$25\%$. The corresponding FALL3D model configuration is provided in the
+supplementary file \texttt{garachico2025.inp}.
+
+\begin{table}[h]
+  \caption{
+    Ensemble configuration for the synthetic experiment. The perturbed model
+    parameters are: eruption column height ($H$), mass eruptive rate ($MER$),
+    Suzuki parameter $A_s$, and the wind horizontal components.
+  }
+    \label{tab:ensemble-synthetic}
+    \begin{tabular}{lccc}
+    \tophline
+    Parameter        & Reference value          & Distribution & Sampling range  \\ \middlehline
+    $H$              & 9~km avl$^\dag$          & Uniform      & $\pm$30\%       \\
+    $MER$            & $\sim 1.6\times 10^6$~kg~s$^{-1}$$^\ddag$ & Uniform      & $\pm$25\%       \\
+    $A_s$            & 4                        & Uniform      & 1               \\
+    Winds            & GFS$^\S$                 & Uniform      & $\pm$25\%       \\
+    \bottomhline
+    \end{tabular}
+    \belowtable{%
+        $^\dag$ Height given in km above the vent level; \\
+        $^\ddag$ Estimated from $H$ according to~\citet{woodhouse2016}; \\
+        $^\S$ Global Forecast System (GFS) weather forecast from NCEP.
+    }
+\end{table}
+
+\subsection{Etna experiment}
+
+For the Etna 24 December 2018 case, each ensemble was simulated by perturbing
+the eruptive column-top height and the horizontal wind components by $20\%$. As
+in the synthetic experiment, the perturbations were generated using LHS to
+obtain an efficient sampling. A time-dependent eruptive column height was
+defined in the simulations, as shown in Fig.~\ref{fig:etna}. The corresponding
+FALL3D model configuration is provided in the supplementary file
+\texttt{etna2018.inp}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{f01}
+  \caption{
+  Eruptive phases defined for the Etna experiment. 
+  The simulations assumed a time-dependent eruptive column height
+  (in meters above vent level).
+  }
+  \label{fig:etna}
+\end{figure}
+
+\section{Ensemble mean of the test dataset}
+The test dataset used in the synthetic experiment consists of 2048 physics-based numerical simulations and is used to assess the performance of the VAE. Figure~\ref{fig:test} shows the ensemble mean of the test dataset, which is used as a reference for the computation of several metrics. The figure also indicates the locations of the points used to construct the histograms.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{f02}
+  \caption{
+    Ensemble mean of the test dataset for the synthetic experiment, consisting of 2048 physics-based numerical simulations generated by the FALL3D dispersal model.
+  }
+  \label{fig:test}
+\end{figure}
+
+\section{Additional files and external repositories}
+
+\subsection{Model configuration files}
+
+The FALL3D model input files distributed with this supplementary material are:
+\begin{itemize}
+  \item \texttt{garachico2025.inp}: model configuration file for the synthetic experiment;
+  \item \texttt{etna2018.inp}: model configuration file for the Etna 24 December 2018 experiment.
+\end{itemize}
+
+\subsection{Code and archived repositories}
+The scripts used to post-process the ensemble simulations, VAE training,
+ensemble sampling, and generate the figures are available from archived
+repositories:
+\begin{itemize}
+  \item Synthetic experiment code Zenodo DOI \texttt{10.5281/zenodo.22759580} \citep{mingari-experiment1}; repository: \\
+    \url{https://github.com/lmingari/egusphere-2025-6097-synthetic}
+  \item Etna experiment code Zenodo DOI \texttt{10.5281/zenodo.22759573} \citep{mingari-experiment2}; repository: \\
+    \url{https://github.com/lmingari/egusphere-2025-6097-etna}
+\end{itemize}
+
+\bibliographystyle{copernicus}
+\bibliography{../references}
+
+\end{document}

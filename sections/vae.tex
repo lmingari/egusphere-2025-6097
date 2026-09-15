@@ -1,40 +1,41 @@
 \section{Variational Autoencoder} \label{sec:vae}
-A Variational Autoencoder (VAE) is a type of generative ML model based on a neural network architecture capable of learning an efficient and probabilistic encoding of data into a latent space of low dimensionality. By sampling vectors from the learned distribution in the latent space, a decoder can afterwards generate new and realistic data samples, even when the network was trained to encode complex and high-dimensional input data ~\citep{kingma2013}. The scheme in Fig.~\ref{fig:vae} shows a typical architecture of a VAE composed of convolutional layers. First, the encoder maps input vectors $\vec{x}$ to the parameters of a multi-dimensional probability distribution over the latent space, \eg a Gaussian with parameters $\vec{\mu}$ and $\vec{\sigma}$ (note that bold symbols denote vector quantities). Second, a vector $\vec{z}$ is sampled in the latent space and passed to the decoder, which aims to reconstruct the original input $\vec{x}$. 
+A Variational Autoencoder (VAE) is a type of generative ML model based on a neural network architecture capable of learning an efficient and probabilistic encoding of data into a latent space of low dimensionality. By sampling from the learned distribution in the latent space, a decoder can afterwards generate new and realistic data samples, even when the network was trained to encode complex and high-dimensional input data~\citep{kingma2013}. The scheme in Fig.~\ref{fig:vae} shows a typical architecture of a VAE composed of convolutional network layers. First, the encoder maps input vectors $\vec{x}$ to the parameters of a multi-dimensional probability distribution over the latent space, \eg a Gaussian with parameters $\vec{\mu}$ and $\vec{\sigma}$ (note that bold symbols denote vector quantities). Second, a vector $\vec{z}$ is sampled in the latent space and passed to the decoder, which aims to reconstruct the original input $\vec{x}$. 
 
 \begin{figure*}[htbp]
   \centering
   \includegraphics[width=\textwidth]{f01}
   \caption{
-    The basic scheme of a VAE composed of two-dimensional convolutional layers. 
-    The encoder compresses an input $\vec{x}$ into the low-dimensional latent space.
-    The decoder attempts to reconstruct the original data from a vector $\vec{z}$ sampled from the latent space.
+    The basic scheme of a VAE composed of two-dimensional convolutional layers (Conv2D). 
+    The encoder compresses an input vector $\vec{x}$ into the low-dimensional latent space.
+    The decoder attempts to reconstruct the original data from a lower-dimensional vector $\vec{z}$ sampled from the latent space.
+    %
+    For illustrative purposes, the encoder and decoder are shown with two hidden layers, representing the progressive dimensionality reduction and expansion. In this work, we used three (synthetic experiment) and four (Etna experiment) hidden layers for the encoder and decoder.
   }
   \label{fig:vae}
 \end{figure*}
 
-The training of the VAE is guided by a loss function that balances the fidelity of the data reconstruction ($\mathcal{L}_R$)  against a term that regularizes the probability distributions in the latent space towards a simple prior distribution $p(\vec{z})$ ($\mathcal{L}_{KL}$):
+The training of the VAE is guided by a loss function ($\mathcal{L}_{VAE}$) that balances the fidelity of the data reconstruction against a term that regularizes the probability distributions in the latent space towards a simple prior distribution $p(\vec{z})$:
 
 \begin{equation}
-  \mathcal{L}_{VAE} = -\mathbb{E}_{q_{\phi}(\vec{z}\vert\vec{x})}
+  \mathcal{L}_{VAE} = \mathcal{L}_R + \mathcal{L}_{KL} =-\mathbb{E}_{q_{\phi}(\vec{z}\vert\vec{x})}
   \left[ \log p_{\theta}(\vec{x} \vert \vec{z}) \right] + 
   D_{KL} \left( q_{\phi}(\vec{z}\vert\vec{x}) \Vert p(\vec{z}) \right)
 \label{eq:L_vae}
 \end{equation}
-where $q_{\phi}(\vec{z}\vert\vec{x})$ is the encoder approximate posterior and $p_{\theta}(\vec{x} \vert \vec{z})$ the decoder likelihood. Equivalently, it can be expressed as the sum of two terms:
-\begin{equation*}
-    \mathcal{L}_{VAE} = \mathcal{L}_R + \mathcal{L}_{KL}
-\end{equation*}
-The first term ($\mathcal{L}_R$, reconstruction loss) encourages reconstructions to be accurate and, in this work, it is assumed to be the Mean Squared Error (MSE) between the input ($\vec{x}$) and its reconstructed output (\vec{x}'):
+where $q_{\phi}(\vec{z}\vert\vec{x})$ is the encoder approximate posterior and $p_{\theta}(\vec{x} \vert \vec{z})$ the decoder likelihood. The first term ($\mathcal{L}_R$, reconstruction loss) encourages reconstructions to be accurate and, in this work, the loss function is assumed to be the Mean Squared Error (MSE) between the input ($\vec{x}$) and its reconstructed output (\vec{x}'):
 \begin{equation}
   \mathcal{L}_R = \dfrac{1}{\spaceDim} \sum_{i=1}^{\spaceDim} (x_i - x'_i)^2
 \end{equation}
-being \spaceDim the dimension of the original space. The second term ($\mathcal{L}_{KL}$) is defined in terms of the Kullback-Leibler (KL) divergence, $D_{KL}$, and measures the distance between the approximate posterior $q_{\phi}(\vec{z} \vert \vec{x})$ and the prior distribution $p(\vec{z})$. In practice, the $D_{KL}$ term forces $q_{\phi}$ to be close to the prior distribution $p(\vec{z})$. Traditionally, the standard VAE assumes a diagonal multivariate normal distribution for the approximate posterior, $q_{\phi}(\vec{z} \vert \vec{x}) = \mathcal {N}(\vec{\mu}, \vec{\sigma^2} \mathbb{I} )$, and a standard normal distribution for the prior, $p(\vec{z}) = \mathcal {N}(\vec{0},\mathbb{I})$, leading to:
+being \spaceDim the dimension of the original space. The second term ($\mathcal{L}_{KL}$) defines the loss function in terms of the Kullback-Leibler divergence ($D_{KL}$), which measures the distance between the approximate posterior $q_{\phi}(\vec{z} \vert \vec{x})$ and the prior distribution $p(\vec{z})$. In practice, the $D_{KL}$ term forces $q_{\phi}$ to be close to the prior distribution $p(\vec{z})$. Traditionally, the standard VAE assumes a diagonal multivariate normal distribution for the approximate posterior, $q_{\phi}(\vec{z} \vert \vec{x}) = \mathcal {N}(\vec{\mu}, \vec{\sigma^2} \mathbb{I} )$, and a standard normal distribution for the prior, $p(\vec{z}) = \mathcal {N}(\vec{0},\mathbb{I})$, leading to:
+%
 \begin{equation}
   \mathcal{L}_{KL} = -\dfrac{1}{2} \sum_{i=1}^\latentDim \left[1+\log \sigma_i^2 - \mu_i^2 - \sigma_i^2 \right]
 \end{equation}
-being $\vec{\mu} = (\mu_1,\dots,\mu_\latentDim)^{\intercal}$ the vector of means, $\vec{\sigma^2} = (\sigma_1^2,\dots,\sigma_\latentDim^2)$ the vector of variances and \latentDim the dimension of the latent space where vectors $\vec{z}$ live. Finally, the so-called $\beta$-VAE is a modification of the standard VAE that uses a hyperparameter $\beta$ to weight the KL divergence term in the loss function:
+%
+where $\vec{\mu} = (\mu_1,\dots,\mu_\latentDim)^{\intercal}$ is the vector of means, $\vec{\sigma^2} = (\sigma_1^2,\dots,\sigma_\latentDim^2)$ is the vector of variances, and \latentDim the dimension of the latent space where vectors $\vec{z}$ live. In addition, this work uses the so-called $\beta$-VAE, a modification of the standard VAE that introduces a hyper-parameter $\beta$ to weight the $\mathcal{L}_{KL}$ term in the global VAE loss function:
+%
 \begin{equation}
   \mathcal{L}_{VAE} = \mathcal{L}_R + \beta \, \mathcal{L}_{KL}
   \label{eq:vae_loss}
 \end{equation}
-This is the expression of the loss function used in this work. In summary, VAE training optimises the encoder and decoder by minimising the VAE loss function \eqref{eq:vae_loss} on a training set of input vectors $\left\{ \vec{x_i} \right\}$, so that inputs are accurately reconstructed from latent samples, while the latent distribution remains close to the prior.
+Larger values of $\beta$ increasingly regularize the latent space towards the standard Gaussian prior $\mathcal{N}(\vec{0},\mathbb{I})$, potentially reducing the amount of information encoded in the latent representation. In summary, the VAE training step optimises the encoder and the decoder by minimising the VAE loss function \eqref{eq:vae_loss} on a training set of input vectors $\left\{ \vec{x_i} \right\}$, so that inputs are accurately reconstructed from latent samples, while the latent distribution remains close to the prior. Details on VAE network architecture and hyper-parameter values are given in Sect.~\ref{sec:VAE_configuration}.
