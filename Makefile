@@ -13,10 +13,10 @@ SECTIONS := introduction vae assimilation experiments results conclusions
 SECTION_FILES := $(addprefix $(SECTION_DIR)/,$(addsuffix .tex,$(SECTIONS)))
 
 # Name of the flattened, single-file output (for submission/archiving)
-MERGED_FILE := $(MAIN_FILE)_merged
+MERGED_FILE := manuscript
 
 # Name of the submission archive
-ZIP_FILE := $(MAIN_FILE)_submission.zip
+ZIP_FILE := submission.zip
 
 # Compiler commands
 PDFLATEX := pdflatex -interaction=nonstopmode
@@ -55,7 +55,7 @@ merge: $(MAIN_FILE).tex $(SECTION_FILES)
 # bibliography/style files, and class files.
 zip: merge
 	rm -f $(ZIP_FILE)
-	zip -r $(ZIP_FILE) $(MERGED_FILE).tex figs *.bsl *.bst *.cls *.bib
+	zip -r $(ZIP_FILE) $(MERGED_FILE).tex *.bst *.cls *.cfg *.sty *.bib figs/*.png figs/*.pdf
 	@echo "Submission archive written to $(ZIP_FILE)"
 
 # Target to open the generated PDF
