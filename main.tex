@@ -69,15 +69,15 @@ Two numerical experiments demonstrate that VAE-generated ensembles can reproduce
 These results highlight the potential of generative AI to efficiently augment physics-based ensembles and improve forecasting skill through latent-space data assimilation.
 \end{abstract}
 
-\clearpage
+%\clearpage
 %\tableofcontents
 
-\include{sections/introduction}
-\include{sections/vae}
-\include{sections/assimilation}
-\include{sections/experiments}
-\include{sections/results}
-\include{sections/conclusions}
+\input{sections/introduction}
+\input{sections/vae}
+\input{sections/assimilation}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/conclusions}
 
 \codeavailability{
   FALL3D v9.1 is available under the version 3
@@ -86,6 +86,10 @@ These results highlight the potential of generative AI to efficiently augment ph
   \url{https://doi.org/10.5281/zenodo.17737081}
   \citep{folch2020,prata2021}.
   %
+  The code and data used for the synthetic and Etna experiments
+  are available in the supplementary material repositories
+  \citep{mingari2026supplementary-synthetic,
+  mingari2026supplementary-etna}.
 }
 
 \authorcontribution{

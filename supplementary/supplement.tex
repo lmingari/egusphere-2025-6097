@@ -2,6 +2,12 @@
 
 \usepackage{xspace}
 
+% Prepend "S" to section, figure, table (and equation) numbers
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+
 \begin{document}
 
 \title{Supplementary material for ``Integrating generative AI with physics-based simulations for probabilistic modelling of volcanic clouds''}
